@@ -14,7 +14,9 @@ int startMenu() {
     printf("2. LOAD_M - Loads all medals in medals.csv.\n");
     printf("3. LOAD_M - Loads all hosts in hosts.csv.\n");
     printf("4. CLEAR - Clears all data in memory.\n");
-    printf("5. SHOW_ALL - Shows all atheletes.\n");
+    printf("5. SHOW_ALL - Shows all athletes.\n");
+    printf("6. SHOW_PARTICIPATIONS - Shows all athletes that participated x amount.\n");
+    printf("7. SHOW_FIRST - Shows all athletes that first participated in x year.\n");
     printf("0. QUIT - Leaves the program (all data is cleared).\n");
     printf("-------------------------------------------\n\n");
 

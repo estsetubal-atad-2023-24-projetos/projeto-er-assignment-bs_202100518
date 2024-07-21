@@ -14,8 +14,7 @@ int main() {
     /* ----------------- */
 
 
-    // Start main menu
-    while(true) {
+    while(true) { // Start main menu
         switch(startMenu()) {
             case 1: // LOAD_A
                 athletes = importAthletes();
@@ -46,12 +45,97 @@ int main() {
                 printf("Records deleted from Athletes (%d) | Medals (%d) | Hosts (%d)", athleteCleanSize, medalCleanSize, hostCleanSize);
                 break;
             case 5: // SHOW_ALL
-                PtList sortedAthletes = orderAthletesAlphabetic(athletes);
+                if(!validateAthletes(athletes)) break;
 
-                paginate(sortedAthletes);
+                PtList athleteCopy = listAthleteShallowCopy(athletes);
+                orderAthletesAlphabetic(athleteCopy);
+                if(athleteCopy == NULL) {
+                    printf("Could not sort athletes, the resulting list is empty.");
+                    free(athleteCopy);
+                    return EXIT_FAILURE;
+                }
 
-                free(sortedAthletes);
+                paginate(athleteCopy);
+
+                free(athleteCopy);
                 break;
+            case 6: // SHOW_PARTICIPATIONS
+                if(!validateAthletes(athletes)) break;
+
+                clearScreen();
+                int participations = 0;
+
+                printf("Insert number of participations -> ");
+                scanf("%d", &participations);
+
+                if(participations < 0) {
+                    printf("The number of participations is invalid\n");
+                    return EXIT_FAILURE;
+                }
+
+                // Copy list
+                PtList athleteCopy = listAthleteShallowCopy(athletes);
+
+                // Filter per participation
+                filterAthletesPerParticipation(athleteCopy, participations);
+
+                // Order by name
+                orderAthletesAlphabetic(athleteCopy);
+
+                if(athleteCopy == NULL) {
+                    printf("Could not filter athletes, the resulting list is empty.");
+                    free(athleteCopy);
+                    return EXIT_FAILURE;
+                }
+
+                // Validate size
+                int size = 0;
+                listSize(athleteCopy, &size);
+
+                if(size < 1) printf("No athletes found with at least %d participations", participations);
+                else paginate(athleteCopy);
+
+                free(athleteCopy);
+                break;
+            case 7: // SHOW_FIRST
+                if(!validateAthletes(athletes)) break;
+                
+                clearScreen();
+                int year = 0;
+
+                printf("Insert year -> ");
+                scanf("%d", &year);
+
+                if(year < 1) {
+                    printf("The year is invalid\n");
+                    return EXIT_FAILURE;
+                }
+
+                // Copy list
+                PtList athleteCopy = listAthleteShallowCopy(athletes);
+
+                // Filter per participation
+                filterAthletesPerFirstYear(athleteCopy, participations);
+
+                // Order by name
+                orderAthletesAlphabetic(athleteCopy);
+
+                if(athleteCopy == NULL) {
+                    printf("Could not filter athletes, the resulting list is empty.");
+                    free(athleteCopy);
+                    return EXIT_FAILURE;
+                }
+
+                // Validate size
+                int size = 0;
+                listSize(athleteCopy, &size);
+
+                if(size < 1) printf("No athletes whose first participation was at %d", year);
+                else paginate(athleteCopy);
+
+                free(athleteCopy);
+                break;
+
             case 0: // QUIT
                 // Destroy data
                 if(athletes != NULL) listDestroy(&athletes);
@@ -66,4 +150,31 @@ int main() {
     }
 
     return EXIT_SUCCESS;
+}
+
+bool validateAthletes(PtList a) {
+    if(a == NULL) {
+        printf("Please import a list of athletes before performing this operation!\n");
+        return false;
+    }
+
+    return true;
+}
+
+bool validateMedals(PtListMedal m) {
+    if(m == NULL) {
+        printf("Please import a list of medals before performing this operation!\n");
+        return false;
+    }
+
+    return true;
+}
+
+bool validateHosts(PtMap m) {
+    if(m == NULL) {
+        printf("Please import a list of hosts before performing this operation!\n");
+        return false;
+    }
+
+    return true;
 }

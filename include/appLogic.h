@@ -4,4 +4,8 @@
 
 void paginate(PtList athletes);
 
-PtList orderAthletesAlphabetic(PtList athletes);
+void orderAthletesAlphabetic(PtList *athletes);
+
+PtList listAthleteShallowCopy(PtList athletes);
+
+void filterAthletesPerParticipation(PtList *athletes, int participations);
