@@ -22,7 +22,7 @@ typedef struct listImpl {
 } ListImpl;
 
 
-static bool ensureMedalCapacity(PtList list) {
+static bool ensureMedalCapacity(PtListMedal list) {
 	ListImpl *lst = (ListImpl *)list;
 
     if (lst->size >= lst->capacity) {
@@ -39,8 +39,8 @@ static bool ensureMedalCapacity(PtList list) {
     return true;
 }
 
-PtList listMedalCreate() {
-	ListImpl *list = malloc(sizeof(ListImpl));
+PtListMedal listMedalCreate() {
+	PtListMedal list = (PtListMedal)malloc(sizeof(ListImpl));
 
     if (list == NULL) return NULL;
 
@@ -57,7 +57,7 @@ PtList listMedalCreate() {
     return list;
 }
 
-int listMedalDestroy(PtList *ptList) {
+int listMedalDestroy(PtListMedal *ptList) {
 	if (ptList == NULL || *ptList == NULL) return LIST_NULL;
 
     ListImpl *list = (ListImpl *)ptList;
@@ -74,7 +74,7 @@ int listMedalDestroy(PtList *ptList) {
     return LIST_OK;
 }
 
-int listMedalAdd(PtList list, int rank, Medal elem) {
+int listMedalAdd(PtListMedal list, int rank, Medal elem) {
 	if (list == NULL) return LIST_NULL;
     if (rank < 0 || rank > ((ListImpl *)list)->size) return LIST_INVALID_RANK;
     if (!ensureMedalCapacity(list)) return LIST_NO_MEMORY;
@@ -90,7 +90,7 @@ int listMedalAdd(PtList list, int rank, Medal elem) {
     return LIST_OK;
 }
 
-int listMedalRemove(PtList list, int rank, Medal *ptElem) {
+int listMedalRemove(PtListMedal list, int rank, Medal *ptElem) {
 	if (list == NULL) return LIST_NULL;
 
     ListImpl *lst = (ListImpl *)list;
@@ -106,7 +106,7 @@ int listMedalRemove(PtList list, int rank, Medal *ptElem) {
     return LIST_OK;
 }
 
-int listMedalGet(PtList list, int rank, Medal *ptElem) {
+int listMedalGet(PtListMedal list, int rank, Medal *ptElem) {
 	if (list == NULL) return LIST_NULL;
 
     ListImpl *lst = (ListImpl *)list;
@@ -117,7 +117,7 @@ int listMedalGet(PtList list, int rank, Medal *ptElem) {
     return LIST_OK;
 }
 
-int listMedalSet(PtList list, int rank, Medal elem, Medal *ptOldElem) {
+int listMedalSet(PtListMedal list, int rank, Medal elem, Medal *ptOldElem) {
 	if (list == NULL) return LIST_NULL;
 
     ListImpl *lst = (ListImpl *)list;
@@ -132,14 +132,14 @@ int listMedalSet(PtList list, int rank, Medal elem, Medal *ptOldElem) {
 
 // This method is a bit stupid but I'll implement it
 // since its in the mandatory list.h
-int listMedalSize(PtList list, int *ptSize) {
+int listMedalSize(PtListMedal list, int *ptSize) {
 	if (list == NULL) return LIST_NULL;
 
     *ptSize = ((ListImpl *)list)->size;
     return LIST_OK;
 }
 
-bool listMedalIsEmpty(PtList list) {
+bool listMedalIsEmpty(PtListMedal list) {
 	if (list == NULL) return 1;
 
 	ListImpl *lst = (ListImpl *)list;
@@ -147,7 +147,7 @@ bool listMedalIsEmpty(PtList list) {
 	return (lst->size != 0);
 }
 
-int listMedalClear(PtList list) {
+int listMedalClear(PtListMedal list) {
 	if (list == NULL) return LIST_NULL;
     ListImpl *lst = (ListImpl *)list;
 
@@ -160,7 +160,7 @@ int listMedalClear(PtList list) {
     return LIST_OK;
 }
 
-void listMedalPrint(PtList list) {
+void listMedalPrint(PtListMedal list) {
 	if (list == NULL) printf("(List NULL)\n");
     else if (listMedalIsEmpty(list)) 
 		printf("(List EMPTY)\n");

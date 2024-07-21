@@ -1,5 +1,4 @@
-#ifndef ATHLETE_H
-#define ATHLETE_H
+#pragma once
 
 #define MAX_DISC_LENGTH 50
 #define MAX_GAME_LENGTH 50
@@ -24,5 +23,3 @@ Medal* createMedal(const char* discipline, const char* event, const char* gender
                    char medalType, char participantType, const char* athleteId, const char* country);
 
 void printMedal(Medal medal);
-
-#endif

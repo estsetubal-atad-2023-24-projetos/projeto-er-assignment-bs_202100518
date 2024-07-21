@@ -17,8 +17,9 @@ SOURCES = $(wildcard $(SRCDIR)/*.c)
 OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SOURCES))
 
 
-default: $(BINDIR)/prog
+default: clean $(BINDIR)/prog
 
+debug: clean
 debug: CFLAGS += -g
 debug: $(BINDIR)/prog
 

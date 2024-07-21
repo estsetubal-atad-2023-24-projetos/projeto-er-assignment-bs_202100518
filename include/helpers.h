@@ -1,6 +1,9 @@
-#ifndef HELPERS_H
-#define HELPERS_H
+#pragma once
 
 int startMenu();
 
-#endif
+int getNumbersFromString(char *str);
+
+int concatenate(int x, int y);
+
+void clearScreen();

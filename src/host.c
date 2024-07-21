@@ -9,11 +9,11 @@ Host* createHost(const char* slug, const char* endDate, const char* startDate, c
     Host* newHost = (Host*) malloc(sizeof(Host));
     if (newHost) {
         strncpy(newHost->gameSlug, slug, MAX_ID_LENGTH);
-        strncpy(newHost->endDate, endDate, MAX_NAME_LENGTH);
-        strncpy(newHost->startDate, startDate, MAX_NAME_LENGTH);
+        strncpy(newHost->endDate, endDate, MAX_HOST_NAME_LENGTH);
+        strncpy(newHost->startDate, startDate, MAX_HOST_NAME_LENGTH);
         strncpy(newHost->location, location, MAX_LOCATION_LENGTH);
         strncpy(newHost->gameName, gameName, MAX_GAME_NAME_LENGTH);
-        strncpy(newHost->season, season, MAX_NAME_LENGTH);
+        strncpy(newHost->season, season, MAX_HOST_NAME_LENGTH);
         newHost->year = year;
     }
     return newHost;

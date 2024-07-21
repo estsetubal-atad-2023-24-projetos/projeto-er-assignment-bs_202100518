@@ -1,6 +1,24 @@
 {
     "files.associations": {
         "*.rmd": "markdown",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "importfunctions.h": "c",
+        "listmedal.h": "c",
+        "map.h": "c",
+        "helpers.h": "c",
+        "medal.h": "c",
+        "list.h": "c",
+        "host.h": "c",
+        "list": "c",
+        "array": "c",
+        "bitset": "c",
+        "string_view": "c",
+        "format": "c",
+        "initializer_list": "c",
+        "ranges": "c",
+        "span": "c",
+        "regex": "c",
+        "vector": "c",
+        "applogic.h": "c"
     }
 }

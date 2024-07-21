@@ -5,14 +5,19 @@
 
 // Criar um novo atleta
 Athlete* createAthlete(const char* id, const char* name, int participations, int firstYear, int birthYear) {
-    Athlete* newAthlete = (Athlete*) malloc(sizeof(Athlete));
+    Athlete *newAthlete = createEmptyAthlete();
     if (newAthlete) {
         strncpy(newAthlete->athleteID, id, MAX_ID_LENGTH);
-        strncpy(newAthlete->athleteName, name, MAX_NAME_LENGTH);
+        strncpy(newAthlete->athleteName, name, MAX_ATHLETE_NAME_LENGTH);
         newAthlete->gamesParticipations = participations;
         newAthlete->yearFirstParticipation = firstYear;
         newAthlete->athleteBirth = birthYear;
     }
+    return newAthlete;
+}
+
+Athlete* createEmptyAthlete() {
+    Athlete* newAthlete = (Athlete*) malloc(sizeof(Athlete));    
     return newAthlete;
 }
 

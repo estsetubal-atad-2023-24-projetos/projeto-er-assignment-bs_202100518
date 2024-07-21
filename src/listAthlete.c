@@ -23,24 +23,22 @@ typedef struct listImpl {
 
 
 static bool ensureCapacity(PtList list) {
-	ListImpl *lst = (ListImpl *)list;
+    if (list->size >= list->capacity) {
+        int newCapacity = list->capacity * 2;
 
-    if (lst->size >= lst->capacity) {
-        int newCapacity = lst->capacity * 2;
-
-        ListElem *newElements = (ListElem*) realloc(lst->elements, newCapacity * sizeof(ListElem *));
+        ListElem *newElements = (ListElem*) realloc(list->elements, newCapacity * sizeof(ListElem *));
         
         if (newElements == NULL) return false;
 
-        lst->capacity = newCapacity;
-        lst->elements = newElements;
+        list->capacity = newCapacity;
+        list->elements = newElements;
     }
 
     return true;
 }
 
 PtList listCreate() {
-	ListImpl *list = malloc(sizeof(ListImpl));
+	PtList list = (PtList)malloc(sizeof(ListImpl));
 
     if (list == NULL) return NULL;
 
@@ -79,13 +77,12 @@ int listAdd(PtList list, int rank, ListElem elem) {
     if (rank < 0 || rank > ((ListImpl *)list)->size) return LIST_INVALID_RANK;
     if (!ensureCapacity(list)) return LIST_NO_MEMORY;
 
-    ListImpl *athList = (ListImpl *)list;
     // Make space for the new element
-    for (int i = athList->size; i > rank; i--)
-        athList->elements[i] = athList->elements[i - 1];
+    for (int i = list->size; i > rank; i--)
+        list->elements[i] = list->elements[i - 1];
     
-    athList->elements[rank] = elem;
-    athList->size++;
+    list->elements[rank] = elem;
+    list->size++;
 
     return LIST_OK;
 }
@@ -130,8 +127,6 @@ int listSet(PtList list, int rank, ListElem elem, ListElem *ptOldElem) {
     return LIST_OK;
 }
 
-// This method is a bit stupid but I'll implement it
-// since its in the mandatory list.h
 int listSize(PtList list, int *ptSize) {
 	if (list == NULL) return LIST_NULL;
 

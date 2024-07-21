@@ -24,15 +24,15 @@
 struct listImpl;
 
 /** Definition of pointer to the  data stucture. */
-typedef struct listImpl *PtList;
+typedef struct listImpl *PtListMedal;
 
 /**
  * @brief Creates a new empty list.
  * 
- * @return PtList pointer to allocated data structure, or
+ * @return PtListMedal pointer to allocated data structure, or
  * @return NULL if unsufficient memory for allocation
  */
-PtList listMedalCreate();
+PtListMedal listMedalCreate();
 
 /**
  * @brief Free all resources of a list.
@@ -42,7 +42,7 @@ PtList listMedalCreate();
  * @return LIST_OK if success, or
  * @return LIST_NULL if '*ptList' is NULL 
  */
-int listMedalDestroy(PtList *ptList);
+int listMedalDestroy(PtListMedal *ptList);
 
 /**
  * @brief Add an element to a list.
@@ -59,7 +59,7 @@ int listMedalDestroy(PtList *ptList);
  * @return LIST_NO_MEMORY if unsufficient memory for allocation, or
  * @return LIST_NULL if 'list' is NULL 
  */
-int listMedalAdd(PtList list, int rank, Medal elem);
+int listMedalAdd(PtListMedal list, int rank, Medal elem);
 
 /**
  * @brief Removes an element from a list.
@@ -75,7 +75,7 @@ int listMedalAdd(PtList list, int rank, Medal elem);
  * @return LIST_EMPTY if the list is empty, or
  * @return LIST_NULL if 'list' is NULL 
  */
-int listMedalRemove(PtList list, int rank, Medal *ptElem);
+int listMedalRemove(PtListMedal list, int rank, Medal *ptElem);
 
 /**
  * @brief Retrieves an element from a list.
@@ -91,7 +91,7 @@ int listMedalRemove(PtList list, int rank, Medal *ptElem);
  * @return LIST_EMPTY if the list is empty, or
  * @return LIST_NULL if 'list' is NULL 
  */
-int listMedalGet(PtList list, int rank, Medal *ptElem);
+int listMedalGet(PtListMedal list, int rank, Medal *ptElem);
 
 /**
  * @brief Replaces an element from a list.
@@ -110,7 +110,7 @@ int listMedalGet(PtList list, int rank, Medal *ptElem);
  * @return LIST_EMPTY if the list is empty, or
  * @return LIST_NULL if 'list' is NULL 
  */
-int listMedalSet(PtList list, int rank, Medal elem, Medal *ptOldElem);
+int listMedalSet(PtListMedal list, int rank, Medal elem, Medal *ptOldElem);
 
 /**
  * @brief Retrieves the size of a list.
@@ -121,7 +121,7 @@ int listMedalSet(PtList list, int rank, Medal elem, Medal *ptOldElem);
  * @return LIST_OK if successful and value in 'ptSize', or
  * @return LIST_NULL if 'list' is NULL 
  */
-int listMedalSize(PtList list, int *ptSize);
+int listMedalSize(PtListMedal list, int *ptSize);
 
 /**
  * @brief Checks whether a list is empty.
@@ -131,7 +131,7 @@ int listMedalSize(PtList list, int *ptSize);
  * @return 'true' if empty or if 'list' is NULL, or
  * @return 'false' it not empty
  */
-bool listMedalIsEmpty(PtList list);
+bool listMedalIsEmpty(PtListMedal list);
 
 /**
  * @brief Clears the contents of a list.
@@ -144,11 +144,11 @@ bool listMedalIsEmpty(PtList list);
  * @return LIST_OK if successful, or
  * @return LIST_NULL if 'list' is NULL 
  */
-int listMedalClear(PtList list);
+int listMedalClear(PtListMedal list);
 
 /**
  * @brief Prints the contents of a list.
  * 
  * @param list [in] pointer to the list
  */
-void listMedalPrint(PtList list);
+void listMedalPrint(PtListMedal list);
