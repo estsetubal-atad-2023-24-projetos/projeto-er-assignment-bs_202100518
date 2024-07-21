@@ -17,12 +17,10 @@ Athlete* createAthlete(const char* id, const char* name, int participations, int
 }
 
 // Imprimir informações do atleta
-void printAthlete(Athlete* athlete) {
-    if (athlete) {
-        printf("Athlete ID: %s\n", athlete->athleteID);
-        printf("Name: %s\n", athlete->athleteName);
-        printf("Games Participations: %d\n", athlete->gamesParticipations);
-        printf("First Participation: %d\n", athlete->yearFirstParticipation);
-        printf("Birth Year: %d\n", athlete->athleteBirth);
-    }
+void printAthlete(Athlete athlete) {
+    printf("Athlete ID: %s\n", athlete.athleteID);
+    printf("Name: %s\n", athlete.athleteName);
+    printf("Games Participations: %d\n", athlete.gamesParticipations);
+    printf("First Participation: %d\n", athlete.yearFirstParticipation);
+    printf("Birth Year: %d\n", athlete.athleteBirth);
 }

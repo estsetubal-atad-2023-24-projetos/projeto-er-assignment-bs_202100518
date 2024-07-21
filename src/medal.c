@@ -18,14 +18,12 @@ Medal* createMedal(const char* discipline, const char* event, const char* gender
 }
 
 // Função para imprimir informações da medalha
-void printMedal(Medal* medal) {
-    if (medal) {
-        printf("Discipline: %s\n", medal->discipline);
-        printf("Event: %s\n", medal->eventTitle);
-        printf("Gender: %s\n", medal->gender);
-        printf("Medal Type: %c\n", medal->medalType);
-        printf("Participant Type: %c\n", medal->participantType);
-        printf("Athlete ID: %s\n", medal->athleteID);
-        printf("Country: %s\n", medal->country);
-    }
+void printMedal(Medal medal) {
+    printf("Discipline: %s\n", medal.discipline);
+    printf("Event: %s\n", medal.eventTitle);
+    printf("Gender: %s\n", medal.gender);
+    printf("Medal Type: %c\n", medal.medalType);
+    printf("Participant Type: %c\n", medal.participantType);
+    printf("Athlete ID: %s\n", medal.athleteID);
+    printf("Country: %s\n", medal.country);
 }

@@ -14,6 +14,7 @@ typedef struct athlete {
 } Athlete;
 
 Athlete* createAthlete(const char* id, const char* name, int participations, int firstYear, int birthYear);
-void printAthlete(Athlete* athlete);
+
+void printAthlete(Athlete athlete);
 
 #endif

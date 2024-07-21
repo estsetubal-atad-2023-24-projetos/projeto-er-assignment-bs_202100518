@@ -20,14 +20,12 @@ Host* createHost(const char* slug, const char* endDate, const char* startDate, c
 }
 
 // Função para imprimir informações do host
-void printHost(Host* host) {
-    if (host) {
-        printf("Game Slug: %s\n", host->gameSlug);
-        printf("End Date: %s\n", host->endDate);
-        printf("Start Date: %s\n", host->startDate);
-        printf("Location: %s\n", host->location);
-        printf("Game Name: %s\n", host->gameName);
-        printf("Season: %s\n", host->season);
-        printf("Year: %d\n", host->year);
-    }
+void printHost(Host host) {
+    printf("Game Slug: %s\n", host.gameSlug);
+    printf("End Date: %s\n", host.endDate);
+    printf("Start Date: %s\n", host.startDate);
+    printf("Location: %s\n", host.location);
+    printf("Game Name: %s\n", host.gameName);
+    printf("Season: %s\n", host.season);
+    printf("Year: %d\n", host.year);
 }

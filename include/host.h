@@ -19,6 +19,6 @@ typedef struct {
 Host* createHost(const char* slug, const char* endDate, const char* startDate, const char* location,
                  const char* gameName, const char* season, int year);
 
-void printHost(Host* host);
+void printHost(Host host);
 
 #endif

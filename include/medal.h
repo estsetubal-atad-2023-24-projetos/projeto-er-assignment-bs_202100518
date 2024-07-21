@@ -22,6 +22,7 @@ typedef struct medal {
 // Função para criar uma nova medalha
 Medal* createMedal(const char* discipline, const char* event, const char* gender,
                    char medalType, char participantType, const char* athleteId, const char* country);
-void printMedal(Medal* medal);
+
+void printMedal(Medal medal);
 
 #endif
