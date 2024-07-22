@@ -1,9 +1,9 @@
 #include "host.h"
+#include "helpers.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// Função para criar um novo host
 Host* createHost(const char* slug, const char* endDate, const char* startDate, const char* location,
                  const char* gameName, const char* season, int year) {
     Host* newHost = (Host*) malloc(sizeof(Host));
@@ -19,13 +19,19 @@ Host* createHost(const char* slug, const char* endDate, const char* startDate, c
     return newHost;
 }
 
-// Função para imprimir informações do host
+Host* createEmptyHost() {
+    Host* newHost = (Host*) malloc(sizeof(Host));    
+    return newHost;
+}
+
 void printHost(Host host) {
-    printf("Game Slug: %s\n", host.gameSlug);
-    printf("End Date: %s\n", host.endDate);
-    printf("Start Date: %s\n", host.startDate);
-    printf("Location: %s\n", host.location);
-    printf("Game Name: %s\n", host.gameName);
-    printf("Season: %s\n", host.season);
+    char *hostingCity = getCharsOnlyFromString(host.gameName);
+    int duration = getDateDiffInDays(host.startDate, host.endDate);
+
+    printf("Hosting City: %s\n", hostingCity);
     printf("Year: %d\n", host.year);
+    printf("Location: %s\n", host.location);
+    printf("Duration (days): %d\n", duration);
+
+    free(hostingCity);
 }

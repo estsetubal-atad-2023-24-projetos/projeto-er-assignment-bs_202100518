@@ -21,6 +21,8 @@
         "vector": "c",
         "applogic.h": "c",
         "type_traits": "c",
-        "numbers": "c"
+        "numbers": "c",
+        "input.h": "c",
+        "chrono": "c"
     }
 }

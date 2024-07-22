@@ -5,6 +5,9 @@
 #include "importFunctions.h"
 #include "list.h"
 #include "appLogic.h"
+#include "input.h"
+
+#define MAX_INPUT_SLUG 50
 
 bool validateAthletes(PtList a);
 bool validateMedals(PtListMedal m);
@@ -25,19 +28,31 @@ int main() {
                 {
                     // Clear current list
                     listClear(athletes);
+                    listDestroy(&athletes);
 
                     athletes = importAthletes();
 
                     // Means they were not loaded properly
-                    if(athletes == NULL) return EXIT_FAILURE;
+                    if(athletes == NULL) athletes = listCreate();
+                    
+                    break;
                 }
-                break;
             case 2: // LOAD_M
 
                 break;
             case 3: // LOAD_H
+                {
+                    // Clear current map
+                    mapClear(hosts);
+                    mapDestroy(&hosts);
 
-                break;
+                    hosts = importHosts();
+
+                    // Means they were not loaded properly
+                    if(hosts == NULL) hosts = mapCreate();
+                    
+                    break;
+                }
             case 4: // CLEAR
                 {
                     int athleteCleanSize, medalCleanSize, hostCleanSize;
@@ -114,7 +129,6 @@ int main() {
                 break;
             case 7: // SHOW_FIRST
                 {
-
                     if(!validateAthletes(athletes)) break;
                     
                     clearScreen();
@@ -152,6 +166,34 @@ int main() {
                     free(filteredAthletes);
                 }
                 break;
+            case 8: //SHOW_HOST
+                {
+                    if(!validateHosts(hosts)) break;
+
+                    char *inputSplug = malloc(sizeof(char) * MAX_INPUT_SLUG);
+
+                    printf("Insert a game slug -> ");                    
+                    readString(inputSplug, MAX_INPUT_SLUG);
+
+                    Host host;
+                    if(mapGet(hosts, inputSplug, &host) != MAP_OK) {
+                        printf("Could not find a host with that slug!\n");
+                        break;
+                    }
+
+                    clearScreen();
+                    printHost(host);
+                    printf("\nPress any key to continue.");
+                    getchar();
+
+                    free(inputSplug);
+                }
+                break;
+            case 9: //DISCIPLINE_STATISTICS
+                {
+
+                    break;
+                }
             case 0: // QUIT
                 // Destroy data
                 if(athletes != NULL) listDestroy(&athletes);

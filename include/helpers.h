@@ -6,6 +6,12 @@ int startMenu();
 
 int getNumbersFromString(char *str);
 
+char* getCharsOnlyFromString(char *str);
+
+int getDateDiffInDays(char *startDate, char *endDate);
+
+int dateToJulianDay(int year, int month, int day);
+
 int concatenate(int x, int y);
 
 void clearScreen();

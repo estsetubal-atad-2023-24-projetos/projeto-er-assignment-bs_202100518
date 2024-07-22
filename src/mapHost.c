@@ -83,7 +83,7 @@ int mapDestroy(PtMap *ptMap) {
 
 	if (map == NULL) return MAP_NULL;
 
-	free(map->elements);
+	if(map->elements != NULL) free(map->elements);
 	free(map);
 
 	*ptMap = NULL;

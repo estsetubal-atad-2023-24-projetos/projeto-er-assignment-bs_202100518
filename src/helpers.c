@@ -19,13 +19,17 @@ int startMenu() {
     printf("5. SHOW_ALL - Shows all athletes.\n");
     printf("6. SHOW_PARTICIPATIONS - Shows all athletes that participated x amount.\n");
     printf("7. SHOW_FIRST - Shows all athletes that first participated in x year.\n");
+    printf("8. SHOW_HOST - Show a specific host data.\n");
+    printf("9. DISCIPLINE_STATISTICS - Shows statistics about a given game slug");
     printf("0. QUIT - Leaves the program (all data is cleared).\n");
     printf("-------------------------------------------\n\n");
 
     printf("Input -> ");
 
     fflush(stdin);
-    scanf("%d", &res);
+    readInteger(&res);
+
+    //scanf("%d", &res);
 
     return res;
 }
@@ -41,6 +45,63 @@ int getNumbersFromString(char *str) {
 
     return numbers;
 }
+
+char* getCharsOnlyFromString(char *str) {
+    char *p = str;
+
+    char *finalString = malloc(strlen(str) + 1);
+    if (finalString == NULL) return NULL;
+
+    int i = 0;
+    while(*p) {
+        if(!isdigit(*p)) finalString[i++] = *p;
+        p++;
+    }
+
+    // Terminate the string
+    finalString[i] = '\0';
+
+    return finalString;
+}
+
+int getDateDiffInDays(char *startDate, char *endDate) {
+    int startYear = 0, startMonth = 0, startDay = 0;
+    int endYear = 0, endMonth = 0, endDay = 0;
+
+    // Parse start date
+    int res = sscanf(startDate, "%d-%d-%dT", &startYear, &startMonth, &startDay);
+
+    if(res != 3) return -1;
+
+    // Parse end date
+    res = sscanf(endDate, "%d-%d-%dT", &endYear, &endMonth, &endDay);
+
+    if(res != 3) return -1;
+
+    // Get julian days (number of days since January 1, 4713 BCE)
+    // Unix time would be better, but there may be records dating further
+    // than 1970 year, that would result in negative values
+    int startJulian = dateToJulianDay(startYear, startMonth, startDay);
+    int endJulian = dateToJulianDay(endYear, endMonth, endDay);
+
+    return abs(endJulian - startJulian);
+}
+
+int dateToJulianDay(int year, int month, int day) {
+    if (month < 3) {
+        year--;
+        month += 12;
+    }
+
+    int A = year / 100;
+    int B = A / 4;
+    int C = 2 - A + B;
+    int D = 365.25 * (year + 4716);
+    int E = 30.6001 * (month + 1);
+
+    return D + E + day + C - 1524;
+}
+
 
 int concatenate(int x, int y) {
     int pow = 10;
@@ -58,7 +119,6 @@ void clearScreen(){
         system("cls");
     #endif
 }
-
 
 void quickSort(PtList *athletes, int low, int high) {
     if (low >= high) return;

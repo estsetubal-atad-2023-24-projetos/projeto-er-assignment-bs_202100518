@@ -92,5 +92,73 @@ PtListMedal importMedals(){
 }
 
 PtMap importHosts(){
-    return NULL;
+    PtMap hosts = mapCreate();
+
+    FILE* fs = fopen("data/hosts.csv", "r");
+    
+    if(fs == NULL) {
+        printf("Error opening hosts.csv\n");
+        return NULL;
+    }
+
+    char line[MAX_LINE_LENGTH];
+    char *fieldHeaders[MAX_FIELD_HEADERS];
+    bool isFirst = true;
+    while (fgets(line, MAX_LINE_LENGTH, fs))
+    {
+        char* tempLine = strdup(line);
+
+        // Trim line endings
+        tempLine[strcspn(line, "\n")] = '\0';
+        
+        Host *host = createEmptyHost();
+
+        int field_count = 0;
+        char *token = strtok(tempLine, ";");
+        while (token && field_count < MAX_FIELD_HEADERS) {
+            if(isFirst) // Map columns to indexes in first line
+                fieldHeaders[field_count] = token;
+            else { // Map values to object in other lines
+                if(strcmp(fieldHeaders[field_count], "game_slug") == 0) {
+                    strcpy(host->gameSlug, token);
+                }
+                else if(strcmp(fieldHeaders[field_count], "game_end_date") == 0) {
+                    strcpy(host->endDate, token);
+                }
+                else if(strcmp(fieldHeaders[field_count], "game_start_date") == 0) {
+                    strcpy(host->startDate, token);
+                }
+                else if(strcmp(fieldHeaders[field_count], "game_location") == 0) {
+                    strcpy(host->location, token);
+                }
+                else if(strcmp(fieldHeaders[field_count], "game_name") == 0) {
+                    strcpy(host->gameName, token);
+                }
+                else if(strcmp(fieldHeaders[field_count], "game_season") == 0) {
+                    strcpy(host->season, token);
+                }
+                else if(strcmp(fieldHeaders[field_count], "game_year") == 0) {
+                    host->year = atoi(token);
+                }
+                else if(strcmp(fieldHeaders[field_count], "") != 0) {
+                    printf("Found invalid column in athletes.csv\n");
+                    return NULL;
+                }
+            }            
+            
+            field_count++;
+            token = strtok(NULL, ";"); // Read next token
+        }
+        
+        // Add record to map
+        if(!isFirst)
+            mapPut(hosts, host->gameSlug, *host);
+        
+        isFirst = false;
+        
+        //free(tempLine);
+        free(token);
+    }
+
+    return hosts;
 }

@@ -19,3 +19,5 @@ Host* createHost(const char* slug, const char* endDate, const char* startDate, c
                  const char* gameName, const char* season, int year);
 
 void printHost(Host host);
+
+Host* createEmptyHost();
