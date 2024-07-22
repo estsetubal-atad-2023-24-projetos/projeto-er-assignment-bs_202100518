@@ -80,7 +80,7 @@ PtList importAthletes() {
         
         isFirst = false;
         
-        free(tempLine);
+        //free(tempLine);
         free(token);
     }
 
