@@ -8,6 +8,6 @@ void orderAthletesAlphabetic(PtList *athletes);
 
 PtList listAthleteShallowCopy(PtList athletes);
 
-void filterAthletesPerParticipation(PtList *athletes, int participations);
+PtList filterAthletesPerParticipation(PtList athletes, int participations);
 
-void filterAthletesPerFirstYear(PtList *athletes, int year);
+PtList filterAthletesPerFirstYear(PtList athletes, int year);

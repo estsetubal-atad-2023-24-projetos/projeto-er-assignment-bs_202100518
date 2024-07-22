@@ -93,7 +93,7 @@ int listRemove(PtList list, int rank, ListElem *ptElem) {
     ListImpl *lst = (ListImpl *)list;
     if (rank < 0 || rank >= lst->size) return LIST_INVALID_RANK;
 
-    *ptElem = lst->elements[rank];
+    if(ptElem != NULL) *ptElem = lst->elements[rank];
 
     // Shift elements
     for (int i = rank; i < lst->size - 1; i++)

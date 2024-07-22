@@ -30,8 +30,8 @@ int main() {
 
                     // Means they were not loaded properly
                     if(athletes == NULL) return EXIT_FAILURE;
-                    break;
                 }
+                break;
             case 2: // LOAD_M
 
                 break;
@@ -54,8 +54,8 @@ int main() {
 
                     // Show final message
                     printf("Records deleted from Athletes (%d) | Medals (%d) | Hosts (%d)", athleteCleanSize, medalCleanSize, hostCleanSize);
-                    break;
                 }
+                break;
             case 5: // SHOW_ALL
                 {
                     if(!validateAthletes(athletes)) break;
@@ -71,8 +71,8 @@ int main() {
                     paginate(athleteCopy);
 
                     free(athleteCopy);
-                    break;
                 }
+                break;
             case 6: // SHOW_PARTICIPATIONS
                 {
                     if(!validateAthletes(athletes)) break;
@@ -90,31 +90,28 @@ int main() {
                         return EXIT_FAILURE;
                     }
 
-                    // Copy list
-                    PtList athleteCopy = listAthleteShallowCopy(athletes);
-
                     // Filter per participation
-                    filterAthletesPerParticipation(&athleteCopy, participations);
-
+                    PtList filteredAthletes = filterAthletesPerParticipation(athletes, participations);
+                    
                     // Order by name
-                    orderAthletesAlphabetic(&athleteCopy);
+                    orderAthletesAlphabetic(&filteredAthletes);
 
-                    if(athleteCopy == NULL) {
+                    if(filteredAthletes == NULL) {
                         printf("Could not filter athletes, the resulting list is empty.");
-                        free(athleteCopy);
+                        free(filteredAthletes);
                         return EXIT_FAILURE;
                     }
 
                     // Validate size
                     int size = 0;
-                    listSize(athleteCopy, &size);
+                    listSize(filteredAthletes, &size);
 
                     if(size < 1) printf("No athletes found with at least %d participations", participations);
-                    else paginate(athleteCopy);
+                    else paginate(filteredAthletes);
 
-                    free(athleteCopy);
-                    break;
+                    free(filteredAthletes);
                 }
+                break;
             case 7: // SHOW_FIRST
                 {
 
@@ -133,31 +130,28 @@ int main() {
                         return EXIT_FAILURE;
                     }
 
-                    // Copy list
-                    PtList athleteCopy = listAthleteShallowCopy(athletes);
-
                     // Filter per participation
-                    filterAthletesPerFirstYear(&athleteCopy, year);
+                    PtList filteredAthletes = filterAthletesPerFirstYear(athletes, year);
 
                     // Order by name
-                    orderAthletesAlphabetic(&athleteCopy);
+                    orderAthletesAlphabetic(&filteredAthletes);
 
-                    if(athleteCopy == NULL) {
+                    if(filteredAthletes == NULL) {
                         printf("Could not filter athletes, the resulting list is empty.");
-                        free(athleteCopy);
+                        free(filteredAthletes);
                         return EXIT_FAILURE;
                     }
 
                     // Validate size
                     int size = 0;
-                    listSize(athleteCopy, &size);
+                    listSize(filteredAthletes, &size);
 
                     if(size < 1) printf("No athletes whose first participation was at %d", year);
-                    else paginate(athleteCopy);
+                    else paginate(filteredAthletes);
 
-                    free(athleteCopy);
-                    break;
+                    free(filteredAthletes);
                 }
+                break;
             case 0: // QUIT
                 // Destroy data
                 if(athletes != NULL) listDestroy(&athletes);

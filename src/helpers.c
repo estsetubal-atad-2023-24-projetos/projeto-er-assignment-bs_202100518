@@ -23,7 +23,9 @@ int startMenu() {
     printf("-------------------------------------------\n\n");
 
     printf("Input -> ");
-    if(!readInteger(&res)) return -1;    
+
+    fflush(stdin);
+    scanf("%d", &res);
 
     return res;
 }

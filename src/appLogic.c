@@ -85,32 +85,48 @@ PtList listAthleteShallowCopy(PtList athletes) {
     return list;
 }
 
-void filterAthletesPerParticipation(PtList *athletes, int participations) {
-    if(athletes == NULL) return;
+PtList filterAthletesPerParticipation(PtList athletes, int participations) {
+    if(athletes == NULL) return NULL;
+
+    PtList list = listCreate();
 
     int athleteSize = 0;
-    listSize(*athletes, &athleteSize);
+    listSize(athletes, &athleteSize);
 
     for(int i = 0; i < athleteSize; i++) {
         Athlete currrentAth;
-        listGet(*athletes, i, &currrentAth);
+        listGet(athletes, i, &currrentAth);
 
-        if(currrentAth.gamesParticipations < participations)
-            listRemove(*athletes, i, NULL);
+        if(currrentAth.gamesParticipations >= participations) {
+            int size = 0;
+            listSize(list, &size);
+
+            listAdd(list, size, currrentAth);
+        }
     }
+
+    return list;
 }
 
-void filterAthletesPerFirstYear(PtList *athletes, int year) {
-    if(athletes == NULL) return;
+PtList filterAthletesPerFirstYear(PtList athletes, int year) {
+    if(athletes == NULL) return NULL;
+
+    PtList list = listCreate();
 
     int athleteSize = 0;
-    listSize(*athletes, &athleteSize);
+    listSize(athletes, &athleteSize);
 
     for(int i = 0; i < athleteSize; i++) {
         Athlete currrentAth;
-        listGet(*athletes, i, &currrentAth);
+        listGet(athletes, i, &currrentAth);
 
-        if(currrentAth.yearFirstParticipation != year)
-            listRemove(*athletes, i, NULL);
+        if(currrentAth.yearFirstParticipation == year){
+            int size = 0;
+            listSize(list, &size);
+
+            listAdd(list, size, currrentAth);
+        }
     }
+
+    return list;
 }
