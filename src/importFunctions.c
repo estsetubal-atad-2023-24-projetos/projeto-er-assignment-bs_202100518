@@ -10,6 +10,7 @@
 #include "athlete.h"
 #include "medal.h"
 #include "host.h"
+#include "input.h"
 
 #define MAX_LINE_LENGTH 1024
 #define MAX_FIELDS 100
@@ -21,67 +22,37 @@ PtList importAthletes() {
     FILE* fs = fopen("data/athletes.csv", "r");
     
     if(fs == NULL) {
-        printf("Error opening athletes.csv\n");
+        printf("File not Found\n");
         return NULL;
     }
 
     char line[MAX_LINE_LENGTH];
-    char *fieldHeaders[MAX_FIELD_HEADERS];
-    bool isFirst = true;
+    fgets(line, MAX_LINE_LENGTH, fs); //skip first line
+    int athleteCount = 0;
     while (fgets(line, MAX_LINE_LENGTH, fs))
     {
         char* tempLine = strdup(line);
 
         // Trim line endings
-        tempLine[strcspn(line, "\n")] = '\0';
+        //tempLine[strcspn(line, "\n")] = '\0';
         
-        Athlete *athlete = createEmptyAthlete();
+        char** tokens = splitString(tempLine, 5, ";");
 
-        int field_count = 0;
-        char *token = strtok(tempLine, ";");
-        while (token && field_count < MAX_FIELD_HEADERS) {
-            if(isFirst) // Map columns to indexes in first line
-                fieldHeaders[field_count] = token;
-            else { // Map values to object in other lines
-                if(strcmp(fieldHeaders[field_count], "athlete_id") == 0) {
-                    strcpy(athlete->athleteID, token);
-                }
-                else if(strcmp(fieldHeaders[field_count], "athlete_full_name") == 0) {
-                    strcpy(athlete->athleteName, token);
-                }
-                else if(strcmp(fieldHeaders[field_count], "games_participations") == 0) {
-                    athlete->gamesParticipations = atoi(token);
-                }
-                else if(strcmp(fieldHeaders[field_count], "first_game") == 0) {
-                    athlete->yearFirstParticipation = getNumbersFromString(token);
-                }
-                else if(strcmp(fieldHeaders[field_count], "athlete_year_birth") == 0) {
-                    athlete->athleteBirth = atoi(token);
-                }
-                else if(strcmp(fieldHeaders[field_count], "") != 0) {
-                    printf("Found invalid column in athletes.csv\n");
-                    return NULL;
-                }
-            }            
+        int year = 0;
+        if(tokens[4] != NULL) 
+            if(strlen(tokens[4]) > 0)
+                year = atoi(tokens[4]);
+
+        Athlete *athlete = createAthlete(tokens[0], tokens[1], atoi(tokens[2]), getNumbersFromString(tokens[3]), year);
             
-            field_count++;
-            token = strtok(NULL, ";"); // Read next token
-        }
-        
-        // Add record to list
-        if(!isFirst) {
-            // Get index to add to
-            int athleteCount = 0;
-            listSize(athletes, &athleteCount);
+        // Get index to add to        
+        listSize(athletes, &athleteCount);
 
-            // Add to list
-            listAdd(athletes, athleteCount, *athlete);
-        }
-        
-        isFirst = false;
-        
-        //free(tempLine);
-        free(token);
+        // Add to list
+        listAdd(athletes, athleteCount, *athlete);
+                
+        free(tokens);
+        free(tempLine);
     }
 
     return athletes;
