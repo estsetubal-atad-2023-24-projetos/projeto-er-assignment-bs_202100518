@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 #include "appLogic.h"
 #include "list.h"
 #include "helpers.h"
@@ -59,17 +60,17 @@ void orderAthletesAlphabetic(PtList *athletes) {
     if(athletes == NULL) return;
     
     int athCount = 0;
-    listSize(athletes, &athCount);
+    listSize(*athletes, &athCount);
     for(int i = 0; i < athCount; i++) {
         for(int j = 0; j < athCount - i - 1; j++) {
             Athlete currentAth, nextAth;
-            listGet(athletes, j, &currentAth);
-            listGet(athletes, j+1, &nextAth);
+            listGet(*athletes, j, &currentAth);
+            listGet(*athletes, j+1, &nextAth);
 
             // Current is greater or equal than the next, so we keep the order
             if(strcmp(currentAth.athleteName, nextAth.athleteName) > 0) {
-                listSet(athletes, j, nextAth, NULL);
-                listSet(athletes, j+1, currentAth, NULL);
+                listSet(*athletes, j, nextAth, NULL);
+                listSet(*athletes, j+1, currentAth, NULL);
             }         
         }
 
@@ -96,14 +97,14 @@ void filterAthletesPerParticipation(PtList *athletes, int participations) {
     if(athletes == NULL) return;
 
     int athleteSize = 0;
-    listSize(athletes, &athleteSize);
+    listSize(*athletes, &athleteSize);
 
     for(int i = 0; i < athleteSize; i++) {
         Athlete currrentAth;
-        listGet(athletes, i, &currrentAth);
+        listGet(*athletes, i, &currrentAth);
 
         if(currrentAth.gamesParticipations < participations)
-            listRemove(athletes, i, NULL);
+            listRemove(*athletes, i, NULL);
     }
 }
 
@@ -111,13 +112,13 @@ void filterAthletesPerFirstYear(PtList *athletes, int year) {
     if(athletes == NULL) return;
 
     int athleteSize = 0;
-    listSize(athletes, &athleteSize);
+    listSize(*athletes, &athleteSize);
 
     for(int i = 0; i < athleteSize; i++) {
         Athlete currrentAth;
-        listGet(athletes, i, &currrentAth);
+        listGet(*athletes, i, &currrentAth);
 
         if(currrentAth.yearFirstParticipation != year)
-            listRemove(athletes, i, NULL);
+            listRemove(*athletes, i, NULL);
     }
 }
