@@ -56,7 +56,8 @@ PtList importAthletes() {
                     athlete->yearFirstParticipation = getNumbersFromString(token);
                 }
                 else if(strcmp(fieldHeaders[field_count], "athlete_year_birth") == 0) {
-                    athlete->athleteBirth = atoi(token);
+                    if(strlen(token) == 0) athlete->athleteBirth = 0;
+                    else athlete->athleteBirth = atoi(token);
                 }
                 else if(strcmp(fieldHeaders[field_count], "") != 0) {
                     printf("Found invalid column in athletes.csv\n");
@@ -88,7 +89,97 @@ PtList importAthletes() {
 }
 
 PtListMedal importMedals(){
-    return NULL;
+    PtListMedal medals = listMedalCreate();
+
+    FILE* fs = fopen("data/medals.csv", "r");
+    
+    if(fs == NULL) {
+        printf("Error opening medals.csv\n");
+        return NULL;
+    }
+
+    char line[MAX_LINE_LENGTH];
+    char *fieldHeaders[MAX_FIELD_HEADERS];
+    bool isFirst = true;
+    while (fgets(line, MAX_LINE_LENGTH, fs))
+    {
+        char* tempLine = strdup(line);
+
+        // Trim line endings
+        tempLine[strcspn(line, "\n")] = '\0';
+        
+        Medal *medal = createEmptyMedal();
+
+        int field_count = 0;
+        char *token = strtok(tempLine, ";");
+        while (token && field_count < MAX_FIELD_HEADERS) {
+            if(isFirst) // Map columns to indexes in first line
+                fieldHeaders[field_count] = token;
+            else { // Map values to object in other lines
+                if(strcmp(fieldHeaders[field_count], "discipline_title") == 0) {
+                    strcpy(medal->discipline, token);
+                }
+                else if(strcmp(fieldHeaders[field_count], "slug_game") == 0) {
+                    strcpy(medal->game, token);
+                }
+                else if(strcmp(fieldHeaders[field_count], "event_title") == 0) {
+                    strcpy(medal->eventTitle, token);
+                }
+                else if(strcmp(fieldHeaders[field_count], "event_gender") == 0) {
+                    strcpy(medal->gender, token);
+                }
+                else if(strcmp(fieldHeaders[field_count], "medal_type") == 0) {
+                    if(strcmp(token, "GOLD") == 0) medal->medalType = 'G';
+                    else if (strcmp(token, "SILVER") == 0) medal->medalType = 'S';
+                    else if (strcmp(token, "BRONZE") == 0) medal->medalType = 'B';
+                }
+                else if(strcmp(fieldHeaders[field_count], "participant_type") == 0) {
+                    if(strcmp(token, "Athlete") == 0) medal->participantType = 'A';
+                    else if (strcmp(token, "GameTeam") == 0) medal->participantType = 'G';
+                }
+                /*else if(strcmp(fieldHeaders[field_count], "participant_title") == 0) {
+                    
+                }*/
+                else if(strcmp(fieldHeaders[field_count], "athlete_id") == 0) {
+                    strcpy(medal->athleteID, token);
+                }
+                else if(strcmp(fieldHeaders[field_count], "country_name") == 0) {
+                    strcpy(medal->country, token);
+                }
+                /*else if(strcmp(fieldHeaders[field_count], "country_3_letter_code") == 0) {
+                    
+                }*/
+                else if(strcmp(fieldHeaders[field_count], "") != 0) {
+                    printf("Found invalid column in athletes.csv\n");
+                    return NULL;
+                }
+            }
+
+            // Validate athlete_id
+            if(medal->participantType == 'A' && strlen(medal->athleteID) == 0)
+                strcpy(medal->athleteID, "UNKNOWN");
+            
+            field_count++;
+            token = strtok(NULL, ";"); // Read next token
+        }
+        
+        // Add record to list
+        if(!isFirst) {
+            // Get index to add to
+            int medalCount = 0;
+            listSize(medals, &medalCount);
+
+            // Add to list
+            listMedalAdd(medals, medalCount, *medal);
+        }
+        
+        isFirst = false;
+        
+        //free(tempLine);
+        free(token);
+    }
+
+    return medals;
 }
 
 PtMap importHosts(){

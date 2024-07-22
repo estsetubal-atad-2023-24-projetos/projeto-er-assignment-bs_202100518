@@ -23,6 +23,7 @@
         "type_traits": "c",
         "numbers": "c",
         "input.h": "c",
-        "chrono": "c"
+        "chrono": "c",
+        "athlete.h": "c"
     }
 }

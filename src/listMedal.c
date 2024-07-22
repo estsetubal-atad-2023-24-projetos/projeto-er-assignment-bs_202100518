@@ -28,7 +28,7 @@ static bool ensureMedalCapacity(PtListMedal list) {
     if (lst->size >= lst->capacity) {
         int newCapacity = lst->capacity * 2;
 
-        Medal *newElements = (Medal *) realloc(lst->elements, newCapacity * sizeof(Medal *));
+        Medal *newElements = (Medal *) realloc(lst->elements, newCapacity * sizeof(Medal));
         
         if (newElements == NULL) return false;
 
@@ -44,7 +44,7 @@ PtListMedal listMedalCreate() {
 
     if (list == NULL) return NULL;
 
-    list->elements = malloc(INITIAL_CAPACITY * sizeof(Medal *));
+    list->elements = malloc(INITIAL_CAPACITY * sizeof(Medal));
     
 	if (list->elements == NULL) {
         free(list);
@@ -96,7 +96,7 @@ int listMedalRemove(PtListMedal list, int rank, Medal *ptElem) {
     ListImpl *lst = (ListImpl *)list;
     if (rank < 0 || rank >= lst->size) return LIST_INVALID_RANK;
 
-    *ptElem = lst->elements[rank];
+    if(ptElem != NULL) *ptElem = lst->elements[rank];
 
     // Shift elements
     for (int i = rank; i < lst->size - 1; i++)
@@ -123,7 +123,7 @@ int listMedalSet(PtListMedal list, int rank, Medal elem, Medal *ptOldElem) {
     ListImpl *lst = (ListImpl *)list;
     if (rank < 0 || rank >= lst->size) return LIST_INVALID_RANK;
 
-    *ptOldElem = lst->elements[rank];
+    if(ptOldElem != NULL) *ptOldElem = lst->elements[rank];
 
     lst->elements[rank] = elem;
 

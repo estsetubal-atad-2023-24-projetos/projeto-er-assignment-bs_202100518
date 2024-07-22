@@ -17,6 +17,11 @@ Medal* createMedal(const char* discipline, const char* event, const char* gender
     return newMedal;
 }
 
+Medal* createEmptyMedal() {
+    Medal* newMedal = (Medal*) malloc(sizeof(Medal));    
+    return newMedal;
+}
+
 // Função para imprimir informações da medalha
 void printMedal(Medal medal) {
     printf("Discipline: %s\n", medal.discipline);

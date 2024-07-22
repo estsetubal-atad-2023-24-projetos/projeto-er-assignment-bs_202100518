@@ -1,13 +1,14 @@
 #include <stdio.h> 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "helpers.h"
 #include "importFunctions.h"
 #include "list.h"
 #include "appLogic.h"
 #include "input.h"
-
-#define MAX_INPUT_SLUG 50
+#include "athlete.h"
+#include "host.h"
 
 bool validateAthletes(PtList a);
 bool validateMedals(PtListMedal m);
@@ -170,10 +171,10 @@ int main() {
                 {
                     if(!validateHosts(hosts)) break;
 
-                    char *inputSplug = malloc(sizeof(char) * MAX_INPUT_SLUG);
+                    char *inputSplug = malloc(sizeof(char) * MAX_ID_LENGTH);
 
                     printf("Insert a game slug -> ");                    
-                    readString(inputSplug, MAX_INPUT_SLUG);
+                    readString(inputSplug, MAX_ID_LENGTH);
 
                     Host host;
                     if(mapGet(hosts, inputSplug, &host) != MAP_OK) {
@@ -191,6 +192,67 @@ int main() {
                 break;
             case 9: //DISCIPLINE_STATISTICS
                 {
+                    if(!validateMedals(medals)) break;
+
+
+
+                    break;
+                }
+            case 10: //ATHLETE_INFO
+                {
+                    if(!validateAthletes(athletes)) break;
+                    if(!validateMedals(medals)) break;
+
+                    char *athleteID = malloc(sizeof(char) * MAX_ID_LENGTH);
+                    printf("Insert an athlete ID -> ");
+                    readString(athleteID, MAX_ID_LENGTH);
+
+                    
+                    showAthleteInfo(athletes, medals, athleteID);
+                    break;
+                }
+            case 11: //TOPN
+                {
+                    if(!validateAthletes(athletes)) break;
+                    if(!validateMedals(medals)) break;
+
+                    int athleteCount = 0;
+                    printf("Insert the amount of athlete records to see -> ");
+                    readInteger(&athleteCount);
+
+                    int startYear = 0, endYear = 0;
+                    printf("Insert the start year -> ");
+                    readInteger(&startYear);
+                    if(startYear < 0) {
+                        printf("Invalid start year\n");
+                        break;
+                    }
+
+                    printf("Insert the end year -> ");
+                    readInteger(&endYear);
+
+                    if(endYear < 0 || endYear < startYear) {
+                        printf("Invalid end year\n");
+                        break;
+                    }
+                    
+                    int gameTypeChoice = 0;
+                    char gameType[7];
+                    printf("Choose a game type, Winter (1) or Summer (2) -> ");
+                    readInteger(&gameTypeChoice);
+
+                    if(gameTypeChoice == 1) strcpy(gameType, "Winter");
+                    else if(gameTypeChoice == 0) strcpy(gameType, "Summer");
+                    else {
+                        printf("Invalid game type\n");
+                        break;
+                    }
+
+                    showTopN(athleteCount, startYear, endYear, gameType, athletes, medals, hosts);
+
+                    
+
+
 
                     break;
                 }

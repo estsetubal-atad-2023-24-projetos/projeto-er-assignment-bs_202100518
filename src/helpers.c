@@ -20,7 +20,9 @@ int startMenu() {
     printf("6. SHOW_PARTICIPATIONS - Shows all athletes that participated x amount.\n");
     printf("7. SHOW_FIRST - Shows all athletes that first participated in x year.\n");
     printf("8. SHOW_HOST - Show a specific host data.\n");
-    printf("9. DISCIPLINE_STATISTICS - Shows statistics about a given game slug");
+    printf("9. DISCIPLINE_STATISTICS - Shows statistics about a given discipline\n");
+    printf("10. ATHLETE_INFO - Shows info about an athlete\n");
+    printf("11. TOPN - N athletes with most medals\n");
     printf("0. QUIT - Leaves the program (all data is cleared).\n");
     printf("-------------------------------------------\n\n");
 
@@ -28,8 +30,6 @@ int startMenu() {
 
     fflush(stdin);
     readInteger(&res);
-
-    //scanf("%d", &res);
 
     return res;
 }
@@ -158,4 +158,12 @@ void swapAthletes(PtList *athletes, int i, int j) {
 
     listSet(*athletes, i, ath2, NULL);
     listSet(*athletes, j, ath1, NULL);
+}
+
+int getYearFromDate(char* date) {
+    int year;
+
+    sscanf(date, "%d-", &year);
+
+    return year;
 }

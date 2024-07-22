@@ -4,7 +4,10 @@
 #include <string.h>
 #include "appLogic.h"
 #include "list.h"
+#include "map.h"
+#include "listMedal.h"
 #include "helpers.h"
+#include "topAthlete.h"
 
 #define MAX_PAGE_SIZE 20
 
@@ -129,4 +132,212 @@ PtList filterAthletesPerFirstYear(PtList athletes, int year) {
     }
 
     return list;
+}
+
+void showAthleteInfo(PtList athletes, PtListMedal medals, char *athleteID) {
+
+    // Fetch corresponding athlete
+    Athlete filteredAths;
+    if(!getAthleteById(athletes, athleteID, &filteredAths)) {
+        printf("Could not find an athlete with that ID.\n");
+        return;
+    }
+
+    // Fetch corresponding medals
+    PtListMedal filteredMedals = getMedalsPerAthlete(medals, athleteID);
+    if(filteredMedals == NULL) {
+        printf("That athlete didn't earn any medals.\n");
+        return;
+    }
+
+    int medalSize = 0;
+    listMedalSize(filteredMedals, &medalSize);
+
+    // Gather info about the contries that the player
+    // represented, and slugs that he earned medals
+    char* countries = malloc(sizeof(char) * 250);
+    char* slugs = malloc(sizeof(char) * 250);    
+    for(int i = 0; i < medalSize; i++) {
+        Medal current;
+        listMedalGet(filteredMedals, i, &current);
+
+        // Countries
+        strcat(countries, current.country);
+        strcat(countries, ", ");
+
+        // Editions
+        strcat(slugs, current.game);
+        strcat(slugs, ", ");
+    }
+
+    free(countries);
+    free(slugs);
+    free(filteredMedals);
+}
+
+PtListMedal getMedalsPerAthlete(PtListMedal medals, char *athleteID) {
+    if(medals == NULL) return NULL;
+
+    PtList list = listMedalCreate();
+
+    int size = 0, subsize = 0;
+    listMedalSize(medals, &size);
+
+    for(int i = 0; i < size; i++) {
+        Medal medal;
+        listMedalGet(medals, i, &medal);
+
+        if(strcmp(medal.athleteID, athleteID) == 0) {
+            listMedalSize(medals, &subsize);
+            listMedalAdd(medals, subsize, medal);
+        }
+    }
+
+    if(subsize == 0) return NULL;
+
+    return list;
+}
+
+bool getAthleteById(PtList athletes, char *athleteID, Athlete* athlete) {
+    int size = 0;
+    listSize(athletes, &size);
+
+    for(int i = 0; i < size; i++) {
+        listGet(athletes, i, athlete);
+
+        if(strcmp(athlete->athleteID, athleteID) == 0) return true;
+    }
+
+    athlete = NULL;
+    return false;
+}
+
+PtListMedal filterMedalsPerDate(int startYear, int endYear, PtListMedal medals, PtMap hosts) {
+    if(medals == NULL) return NULL;
+
+    int size = 0, lstSize = 0;
+    listMedalSize(medals, &size);
+    
+    PtListMedal list = listMedalCreate();
+    for(int i = 0; i < size; i++) {
+        Medal current;
+        listMedalGet(medals, i, &current);
+
+        // Get host
+        Host host;
+        mapGet(hosts, current.game, &host);
+
+        if(getYearFromDate(host.startDate) >= startYear && getYearFromDate(host.endDate) <= endYear) {
+            listMedalSize(list, &lstSize);
+            listMedalAdd(list, lstSize, current);
+        }        
+    }
+
+    return list;
+}
+
+PtListMedal filterMedalsPerGameType(char *gameType, PtListMedal medals, PtMap hosts) {
+    if(medals == NULL) return NULL;
+
+    int size = 0, lstSize = 0;
+    listMedalSize(medals, &size);
+    
+    PtListMedal list = listMedalCreate();
+    for(int i = 0; i < size; i++) {
+        Medal current;
+        listMedalGet(medals, i, &current);
+
+        // Get host
+        Host host;
+        mapGet(hosts, current.game, &host);
+
+        if(strcmp(gameType, host.season) == 0) {
+            listMedalSize(list, &lstSize);
+            listMedalAdd(list, lstSize, current);
+        }        
+    }
+
+    return list;
+}
+
+void showTopN(int n, int startYear, int endYear, char *gameType, PtList athletes, PtListMedal medals, PtMap hosts) {
+    if(athletes == NULL || medals == NULL || hosts == NULL) {
+        printf("Make sure athletes, medals and hosts have been imported!");
+        return;
+    }
+
+    PtListMedal filteredMedals = filterMedalsPerDate(startYear, endYear, medals, hosts);
+    PtListMedal finalFilteredMedals = filterMedalsPerGameType(gameType, filteredMedals, hosts);
+    free(filteredMedals);
+
+    TopAthlete *topAthletes = malloc(sizeof(TopAthlete) * sizeof(n));
+
+    int athSize = 0, medalSize = 0;
+    listSize(athletes, &athSize);
+    listMedalSize(finalFilteredMedals, &medalSize);
+    int i = 0;
+    for(; (i < athSize && athSize < n) || (i < n); i++) {
+        Athlete currentAthlete;
+        listGet(athletes, i, &currentAthlete);
+
+        topAthletes[i].athlete = currentAthlete;
+        topAthletes[i].totalMedals = 0;
+
+        for(int j = 0; j < medalSize; j++) {
+            Medal currentMedal;
+            listMedalGet(finalFilteredMedals, i, &currentMedal);
+
+            if(strcmp(currentMedal.athleteID, currentAthlete.athleteID) == 0) {
+                // Add total medals
+                topAthletes[i].totalMedals++;
+
+                // Add medals per game
+                MedalsPerGame *medalsPerGame = getMedalsPerGame(&topAthletes[i], currentMedal.game);
+                if(medalsPerGame != NULL) { // Create new
+                    MedalsPerGame *newMedalsPerGame = malloc(sizeof(MedalsPerGame));
+                    strcpy(newMedalsPerGame->game, currentMedal.game);
+                    newMedalsPerGame->medals = 1;
+
+                    addMedalsPerGame(&topAthletes[i], *newMedalsPerGame);
+                }
+                else { // Increment existent
+                    medalsPerGame->medals++;
+                }
+
+                // Sum days played
+                Host currentHost;
+                mapGet(hosts, currentMedal.game, &currentHost);
+
+                topAthletes[i].daysPlayed = getDateDiffInDays(currentHost.startDate, currentHost.endDate);
+            }
+        }
+    }
+
+
+    // Display information
+    for(int j = 0; j < i; j++) {
+        printf("\n----------\n");
+
+        printf("Athlete: %s\n", topAthletes[i].athlete.athleteID);
+
+        printf("Participated Countries: \n");
+        for(int k = 0; k < topAthletes[i].medalsPerGameSize; k++) {
+            Host currentHost;
+            mapGet(hosts, topAthletes[i].medalsPerGame[k].game, &currentHost);
+
+            printf("- %s\n", currentHost.location);
+        }
+        printf("\n");
+        
+        printf("Total Medals Earned: %d\n", topAthletes[i].totalMedals);
+
+        printf("Average Medals per Game: %.2lf\n", topAthletes[i].totalMedals / (double)topAthletes[i].medalsPerGameSize);
+
+        printf("Average Medals per Day: %.2lf\n", topAthletes[i].totalMedals / (double)topAthletes[i].daysPlayed);
+        
+        printf("----------\n");
+    }
+
+    free(finalFilteredMedals);
+    free(topAthletes);
 }

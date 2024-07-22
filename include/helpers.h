@@ -21,3 +21,5 @@ void quickSort(PtList *athletes, int low, int high);
 int partition(PtList *athletes, int low, int high);
 
 void swapAthletes(PtList *athletes, int i, int j);
+
+int getYearFromDate(char* date);

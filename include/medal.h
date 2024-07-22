@@ -22,4 +22,6 @@ typedef struct medal {
 Medal* createMedal(const char* discipline, const char* event, const char* gender,
                    char medalType, char participantType, const char* athleteId, const char* country);
 
+Medal* createEmptyMedal();
+
 void printMedal(Medal medal);
