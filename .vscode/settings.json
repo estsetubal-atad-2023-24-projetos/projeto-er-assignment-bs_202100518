@@ -19,6 +19,7 @@
         "span": "c",
         "regex": "c",
         "vector": "c",
-        "applogic.h": "c"
+        "applogic.h": "c",
+        "type_traits": "c"
     }
 }

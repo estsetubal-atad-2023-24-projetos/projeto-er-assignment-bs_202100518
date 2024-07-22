@@ -23,17 +23,17 @@ typedef struct listImpl {
 
 
 static bool ensureCapacity(PtList list) {
-    if (list->size >= list->capacity) {
-        int newCapacity = list->capacity * 2;
+    if (list->size < list->capacity) return true;
+    
+    int newCapacity = list->capacity * 2;
 
-        ListElem *newElements = (ListElem*) realloc(list->elements, newCapacity * sizeof(ListElem *));
-        
-        if (newElements == NULL) return false;
+    ListElem *newElements = (ListElem*) realloc(list->elements, newCapacity * sizeof(ListElem));
+    
+    if (newElements == NULL) return false;
 
-        list->capacity = newCapacity;
-        list->elements = newElements;
-    }
-
+    list->capacity = newCapacity;
+    list->elements = newElements;
+    
     return true;
 }
 
@@ -42,7 +42,7 @@ PtList listCreate() {
 
     if (list == NULL) return NULL;
 
-    list->elements = malloc(INITIAL_CAPACITY * sizeof(ListElem *));
+    list->elements = malloc(INITIAL_CAPACITY * sizeof(ListElem));
     
 	if (list->elements == NULL) {
         free(list);
@@ -65,7 +65,7 @@ int listDestroy(PtList *ptList) {
         free(&list->elements[i]);
 	
     free(list->elements);
-    free(list);
+    //free(list);
 
     *ptList = NULL;
 
@@ -109,6 +109,8 @@ int listGet(PtList list, int rank, ListElem *ptElem) {
     ListImpl *lst = (ListImpl *)list;
     if (rank < 0 || rank >= lst->size) return LIST_INVALID_RANK;
 
+    if(ptElem == NULL) ptElem = (ListElem*) malloc(sizeof(ListElem));
+    
     *ptElem = lst->elements[rank];
 
     return LIST_OK;
@@ -120,7 +122,8 @@ int listSet(PtList list, int rank, ListElem elem, ListElem *ptOldElem) {
     ListImpl *lst = (ListImpl *)list;
     if (rank < 0 || rank >= lst->size) return LIST_INVALID_RANK;
 
-    *ptOldElem = lst->elements[rank];
+    // This may be null if we don't want to keep the old element
+    if(ptOldElem != NULL) *ptOldElem = lst->elements[rank];
 
     lst->elements[rank] = elem;
 

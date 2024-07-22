@@ -19,32 +19,36 @@ void paginate(PtList athletes) {
     }
     
     char option = ' ';
-    Athlete *ath = NULL;
-    while(tolower(option) != 'c') {        
+    Athlete ath;
+    while(tolower(option) != 'q') {        
         int endRecord = MAX_PAGE_SIZE * currentPage;
-        int startRecord = endRecord - MAX_PAGE_SIZE;
+        int startRecord = endRecord - MAX_PAGE_SIZE + 1;
 
         // This means we have reached the end (aka last page)
         if(endRecord > athletesCount) endRecord = athletesCount;
 
         clearScreen();
         printf("%d Atheletes were found!\n\n", athletesCount);
-        printf("+------------+--------------+----------------------+-----------------------------+---------------+\n");
-        printf("| Athlete ID | Athlete Name | Games Participations | Year of First Participation | Athlete Birth |\n");
-        printf("+------------+--------------+----------------------+-----------------------------+---------------+\n");
+        printf("+--------------------------------+-------------------------------------+----------------------+-----------------------------+---------------+\n");
+        printf("| Athlete ID                     | Athlete Name                        | Games Participations | Year of First Participation | Athlete Birth |\n");
+        printf("+--------------------------------+-------------------------------------+----------------------+-----------------------------+---------------+\n");
 
         for(int i = startRecord-1; (i < athletesCount) || (i < endRecord); i++) {            
-            listGet(athletes, i, ath);
+            if(listGet(athletes, i, &ath) != LIST_OK) {
+                printf("An error ocurred fetching records");
+                return;
+            }
 
-            printf("| %10s | %12s | %20d | %27d | %13d |\n", 
-                ath->athleteID, ath->athleteName, ath->gamesParticipations, ath->yearFirstParticipation, ath->athleteBirth);
-            printf("+------------+--------------+----------------------+-----------------------------+---------------+\n");
+            printf("| %30s | %35s | %20d | %27d | %13d |\n", 
+                ath.athleteID, ath.athleteName, ath.gamesParticipations, ath.yearFirstParticipation, ath.athleteBirth);
+            printf("+--------------------------------+-------------------------------------+----------------------+-----------------------------+---------------+\n");
         }
 
         printf("\nDisplaying from %d to %d records. Total of %d records.\n", startRecord, endRecord, athletesCount);
         printf("Press 'f' to go to next page, 'p' to go to previous or 'q' to quit.\n");
         printf("Input -> ");
 
+        fflush(stdin);
         scanf("%c", &option);
 
         if(tolower(option) == 'f') {
@@ -52,8 +56,9 @@ void paginate(PtList athletes) {
         }
         else if(tolower(option) == 'p') {
             if(currentPage > 1) currentPage--;
-        }        
-    }    
+        }
+        else if(tolower(option) == 'q') break;
+    }
 }
 
 void orderAthletesAlphabetic(PtList *athletes) {

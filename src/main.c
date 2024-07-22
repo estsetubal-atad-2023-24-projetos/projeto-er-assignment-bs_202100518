@@ -23,10 +23,14 @@ int main() {
         switch(startMenu()) {
             case 1: // LOAD_A
                 {
-                    athletes = importAthletes();
+                    // Clear current list
+                    listClear(athletes);
 
-                    if(athletes == NULL) // Means they were not loaded properly
-                        return EXIT_FAILURE;
+                    //athletes = importAthletes();
+                    athletes = tempImportAthletes();
+
+                    // Means they were not loaded properly
+                    if(athletes == NULL) return EXIT_FAILURE;
                     break;
                 }
             case 2: // LOAD_M
@@ -78,6 +82,8 @@ int main() {
                     int participations = 0;
 
                     printf("Insert number of participations -> ");
+
+                    fflush(stdin);
                     scanf("%d", &participations);
 
                     if(participations < 0) {
@@ -119,6 +125,8 @@ int main() {
                     int year = 0;
 
                     printf("Insert year -> ");
+
+                    fflush(stdin);
                     scanf("%d", &year);
 
                     if(year < 1) {
