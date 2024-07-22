@@ -11,8 +11,6 @@
  */
 PtList importAthletes();
 
-PtList tempImportAthletes();
-
 /**
  * @brief Imports Medals data into a list structure
  * 

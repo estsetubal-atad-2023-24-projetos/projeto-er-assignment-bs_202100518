@@ -1,8 +1,10 @@
-#include "helpers.h"
-#include "input.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
+#include "helpers.h"
+#include "input.h"
+#include "list.h"
 
 #define MAX_NUMS_STR 200
 
@@ -53,4 +55,45 @@ void clearScreen(){
     #if defined(_WIN32) || defined(_WIN64)
         system("cls");
     #endif
+}
+
+
+void quickSort(PtList *athletes, int low, int high) {
+    if (low >= high) return;
+
+    int pivot = partition(athletes, low, high);
+
+    quickSort(athletes, low, pivot - 1); // Sort first half
+    quickSort(athletes, pivot + 1, high); // Sort second half
+}
+
+// Selects the last element (pivot) and moves all athletes with name lesser than
+// the pivot to the left, and greater to the right
+int partition(PtList *athletes, int low, int high) {
+    // Get pivot
+    Athlete pivotAth;
+    listGet(*athletes, high, &pivotAth);
+
+    int i = (low - 1);
+    for (int j = low; j <= high - 1; j++) {
+        Athlete currentAth;
+        listGet(*athletes, j, &currentAth);
+
+        if (strcmp(currentAth.athleteName, pivotAth.athleteName) < 0) {
+            i++;
+            swapAthletes(athletes, i, j);
+        }
+    }
+
+    swapAthletes(athletes, i + 1, high);
+    return (i + 1);
+}
+
+void swapAthletes(PtList *athletes, int i, int j) {
+    Athlete ath1, ath2;
+    listGet(*athletes, i, &ath1);
+    listGet(*athletes, j, &ath2);
+
+    listSet(*athletes, i, ath2, NULL);
+    listSet(*athletes, j, ath1, NULL);
 }

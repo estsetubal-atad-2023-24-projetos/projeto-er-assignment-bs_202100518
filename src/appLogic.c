@@ -33,7 +33,7 @@ void paginate(PtList athletes) {
         printf("| Athlete ID                     | Athlete Name                        | Games Participations | Year of First Participation | Athlete Birth |\n");
         printf("+--------------------------------+-------------------------------------+----------------------+-----------------------------+---------------+\n");
 
-        for(int i = startRecord-1; (i < athletesCount) || (i < endRecord); i++) {            
+        for(int i = startRecord-1; (i < athletesCount && athletesCount < endRecord) || (i < endRecord); i++) {            
             if(listGet(athletes, i, &ath) != LIST_OK) {
                 printf("An error ocurred fetching records");
                 return;
@@ -66,20 +66,7 @@ void orderAthletesAlphabetic(PtList *athletes) {
     
     int athCount = 0;
     listSize(*athletes, &athCount);
-    for(int i = 0; i < athCount; i++) {
-        for(int j = 0; j < athCount - i - 1; j++) {
-            Athlete currentAth, nextAth;
-            listGet(*athletes, j, &currentAth);
-            listGet(*athletes, j+1, &nextAth);
-
-            // Current is greater or equal than the next, so we keep the order
-            if(strcmp(currentAth.athleteName, nextAth.athleteName) > 0) {
-                listSet(*athletes, j, nextAth, NULL);
-                listSet(*athletes, j+1, currentAth, NULL);
-            }         
-        }
-
-    }
+    quickSort(athletes, 0, athCount-1);
 }
 
 PtList listAthleteShallowCopy(PtList athletes) {

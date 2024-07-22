@@ -26,8 +26,7 @@ int main() {
                     // Clear current list
                     listClear(athletes);
 
-                    //athletes = importAthletes();
-                    athletes = tempImportAthletes();
+                    athletes = importAthletes();
 
                     // Means they were not loaded properly
                     if(athletes == NULL) return EXIT_FAILURE;
