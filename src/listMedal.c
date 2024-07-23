@@ -23,19 +23,17 @@ typedef struct listImpl {
 
 
 static bool ensureMedalCapacity(PtListMedal list) {
-	ListImpl *lst = (ListImpl *)list;
+    if (list->size < list->capacity) return true;
+    
+    int newCapacity = list->capacity * 2;
 
-    if (lst->size >= lst->capacity) {
-        int newCapacity = lst->capacity * 2;
+    Medal *newElements = (Medal*) realloc(list->elements, newCapacity * sizeof(Medal));
+    
+    if (newElements == NULL) return false;
 
-        Medal *newElements = (Medal *) realloc(lst->elements, newCapacity * sizeof(Medal));
-        
-        if (newElements == NULL) return false;
-
-        lst->capacity = newCapacity;
-        lst->elements = newElements;
-    }
-
+    list->capacity = newCapacity;
+    list->elements = newElements;
+    
     return true;
 }
 
@@ -75,17 +73,17 @@ int listMedalDestroy(PtListMedal *ptList) {
 }
 
 int listMedalAdd(PtListMedal list, int rank, Medal elem) {
-	if (list == NULL) return LIST_NULL;
+    if (list == NULL) return LIST_NULL;
     if (rank < 0 || rank > ((ListImpl *)list)->size) return LIST_INVALID_RANK;
     if (!ensureMedalCapacity(list)) return LIST_NO_MEMORY;
 
-    ListImpl *athList = (ListImpl *)list;
+    ListImpl *medalList = (ListImpl *)list;
     // Make space for the new element
-    for (int i = athList->size; i > rank; i--)
-        athList->elements[i] = athList->elements[i - 1];
+    for (int i = list->size; i > rank; i--)
+        medalList->elements[i] = medalList->elements[i - 1];
     
-    athList->elements[rank] = elem;
-    athList->size++;
+    medalList->elements[rank] = elem;
+    medalList->size++;
 
     return LIST_OK;
 }
@@ -107,11 +105,13 @@ int listMedalRemove(PtListMedal list, int rank, Medal *ptElem) {
 }
 
 int listMedalGet(PtListMedal list, int rank, Medal *ptElem) {
-	if (list == NULL) return LIST_NULL;
+    if (list == NULL) return LIST_NULL;
 
     ListImpl *lst = (ListImpl *)list;
     if (rank < 0 || rank >= lst->size) return LIST_INVALID_RANK;
 
+    if(ptElem == NULL) ptElem = (Medal*) malloc(sizeof(Medal));
+    
     *ptElem = lst->elements[rank];
 
     return LIST_OK;
@@ -130,8 +130,6 @@ int listMedalSet(PtListMedal list, int rank, Medal elem, Medal *ptOldElem) {
     return LIST_OK;
 }
 
-// This method is a bit stupid but I'll implement it
-// since its in the mandatory list.h
 int listMedalSize(PtListMedal list, int *ptSize) {
 	if (list == NULL) return LIST_NULL;
 

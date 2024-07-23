@@ -270,35 +270,41 @@ void showTopN(int n, int startYear, int endYear, char *gameType, PtList athletes
     PtListMedal finalFilteredMedals = filterMedalsPerGameType(gameType, filteredMedals, hosts);
     free(filteredMedals);
 
-    TopAthlete *topAthletes = malloc(sizeof(TopAthlete) * sizeof(n));
 
     int athSize = 0, medalSize = 0;
     listSize(athletes, &athSize);
     listMedalSize(finalFilteredMedals, &medalSize);
-    int i = 0;
-    for(; (i < athSize && athSize < n) || (i < n); i++) {
+
+    
+    TopAthlete *topAthletes = malloc(sizeof(TopAthlete) * athSize);
+    int topAthletesCount = 0;
+    for(int i = 0; i < athSize; i++) {
         Athlete currentAthlete;
         listGet(athletes, i, &currentAthlete);
-
-        topAthletes[i].athlete = currentAthlete;
-        topAthletes[i].totalMedals = 0;
-
+        
+        bool found = false; // Use this thing to only create records for athletes with medals
         for(int j = 0; j < medalSize; j++) {
             Medal currentMedal;
-            listMedalGet(finalFilteredMedals, i, &currentMedal);
+            listMedalGet(finalFilteredMedals, j, &currentMedal);
+
+            if(!found) {
+                topAthletes[topAthletesCount].totalMedals = 0;
+            }
 
             if(strcmp(currentMedal.athleteID, currentAthlete.athleteID) == 0) {
+                found = true; 
+
                 // Add total medals
-                topAthletes[i].totalMedals++;
+                topAthletes[topAthletesCount].totalMedals++;
 
                 // Add medals per game
-                MedalsPerGame *medalsPerGame = getMedalsPerGame(&topAthletes[i], currentMedal.game);
-                if(medalsPerGame != NULL) { // Create new
+                MedalsPerGame *medalsPerGame = getMedalsPerGame(&topAthletes[topAthletesCount], currentMedal.game);
+                if(medalsPerGame == NULL) { // Create new
                     MedalsPerGame *newMedalsPerGame = malloc(sizeof(MedalsPerGame));
                     strcpy(newMedalsPerGame->game, currentMedal.game);
                     newMedalsPerGame->medals = 1;
 
-                    addMedalsPerGame(&topAthletes[i], *newMedalsPerGame);
+                    addMedalsPerGame(&topAthletes[topAthletesCount], *newMedalsPerGame);
                 }
                 else { // Increment existent
                     medalsPerGame->medals++;
@@ -308,36 +314,54 @@ void showTopN(int n, int startYear, int endYear, char *gameType, PtList athletes
                 Host currentHost;
                 mapGet(hosts, currentMedal.game, &currentHost);
 
-                topAthletes[i].daysPlayed = getDateDiffInDays(currentHost.startDate, currentHost.endDate);
+                topAthletes[topAthletesCount].daysPlayed = getDateDiffInDays(currentHost.startDate, currentHost.endDate);
             }
+        }
+
+        if(found) {
+            strcpy(topAthletes[topAthletesCount].athlete, currentAthlete.athleteID);
+            topAthletesCount++;
         }
     }
 
+    // Validate empty filtered athletes
+    if(topAthletesCount == 0) {
+        printf("There aren't any athletes that won any medals.\n");
+        return;
+    }
 
     // Display information
-    for(int j = 0; j < i; j++) {
+    for(int j = 0; (j < topAthletesCount && topAthletesCount < n) || (j < n); j++) {
         printf("\n----------\n");
 
-        printf("Athlete: %s\n", topAthletes[i].athlete.athleteID);
+        printf("Athlete: %s\n", topAthletes[j].athlete);
 
         printf("Participated Countries: \n");
-        for(int k = 0; k < topAthletes[i].medalsPerGameSize; k++) {
+        for(int k = 0; k < topAthletes[j].medalsPerGameSize; k++) {
             Host currentHost;
-            mapGet(hosts, topAthletes[i].medalsPerGame[k].game, &currentHost);
+            mapGet(hosts, topAthletes[j].medalsPerGame[k].game, &currentHost);
 
             printf("- %s\n", currentHost.location);
         }
         printf("\n");
         
-        printf("Total Medals Earned: %d\n", topAthletes[i].totalMedals);
+        printf("Total Medals Earned: %d\n", topAthletes[j].totalMedals);
 
-        printf("Average Medals per Game: %.2lf\n", topAthletes[i].totalMedals / (double)topAthletes[i].medalsPerGameSize);
+        if(topAthletes[j].medalsPerGameSize == 0)
+            printf("Average Medals per Game: N/A (no medals per game)\n");
+        else
+            printf("Average Medals per Game: %d\n", topAthletes[j].totalMedals / topAthletes[j].medalsPerGameSize);
 
-        printf("Average Medals per Day: %.2lf\n", topAthletes[i].totalMedals / (double)topAthletes[i].daysPlayed);
+        if(topAthletes[j].daysPlayed == 0)
+            printf("Average Medals per Day: N/A (No days played)\n");
+        else
+            printf("Average Medals per Day: %d\n", topAthletes[j].totalMedals / topAthletes[j].daysPlayed);
         
         printf("----------\n");
     }
 
     free(finalFilteredMedals);
-    free(topAthletes);
+    
+    // This thing throws an exception, no idea why
+    //free(topAthletes);
 }

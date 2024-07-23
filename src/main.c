@@ -17,9 +17,9 @@ bool validateHosts(PtMap m);
 
 int main() {
     /* Field Declaration */
-    PtList athletes;
-    PtListMedal medals;
-    PtMap hosts;
+    PtList athletes = NULL;
+    PtListMedal medals = NULL;
+    PtMap hosts = NULL;
     /* ----------------- */
 
 
@@ -39,8 +39,18 @@ int main() {
                     break;
                 }
             case 2: // LOAD_M
+                {
+                    // Clear current list
+                    listMedalClear(medals);
+                    listMedalDestroy(&medals);
 
-                break;
+                    medals = importMedals();
+
+                    // Means they were not loaded properly
+                    if(medals == NULL) medals = listMedalCreate();
+                    
+                    break;
+                }
             case 3: // LOAD_H
                 {
                     // Clear current map
@@ -215,6 +225,7 @@ int main() {
                 {
                     if(!validateAthletes(athletes)) break;
                     if(!validateMedals(medals)) break;
+                    if(!validateHosts(hosts)) break;
 
                     int athleteCount = 0;
                     printf("Insert the amount of athlete records to see -> ");
@@ -242,18 +253,14 @@ int main() {
                     readInteger(&gameTypeChoice);
 
                     if(gameTypeChoice == 1) strcpy(gameType, "Winter");
-                    else if(gameTypeChoice == 0) strcpy(gameType, "Summer");
+                    else if(gameTypeChoice == 2) strcpy(gameType, "Summer");
                     else {
                         printf("Invalid game type\n");
                         break;
                     }
 
                     showTopN(athleteCount, startYear, endYear, gameType, athletes, medals, hosts);
-
                     
-
-
-
                     break;
                 }
             case 0: // QUIT

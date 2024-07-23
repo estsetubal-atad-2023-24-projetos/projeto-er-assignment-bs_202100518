@@ -14,7 +14,7 @@ typedef struct medalsPerGame {
 } MedalsPerGame;
 
 typedef struct topAthlete {
-    Athlete athlete;
+    char athlete[MAX_ID_LENGTH];
     char country[MAX_TOP_COUNTRY_LENGTH];
     int totalMedals;
     MedalsPerGame medalsPerGame[MAX_MEDALS_GAME_LENGTH];
