@@ -60,12 +60,9 @@ int listMedalDestroy(PtListMedal *ptList) {
 
     ListImpl *list = (ListImpl *)ptList;
 
-    // Free each element since they were dynamically allocated
-    for (int i = 0; i < list->size; i++)
-        free(&list->elements[i]);
-	
     free(list->elements);
-    free(list);
+	// This throws an exception
+	//free(list);
 
     *ptList = NULL;
 
@@ -149,9 +146,7 @@ int listMedalClear(PtListMedal list) {
 	if (list == NULL) return LIST_NULL;
     ListImpl *lst = (ListImpl *)list;
 
-    // Free each element
-    for (int i = 0; i < lst->size; i++)
-        free(&lst->elements[i]);
+    free(lst->elements);
 
     lst->size = 0;
 	
