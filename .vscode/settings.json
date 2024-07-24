@@ -24,6 +24,7 @@
         "numbers": "c",
         "input.h": "c",
         "chrono": "c",
-        "athlete.h": "c"
+        "athlete.h": "c",
+        "valarray": "c"
     }
 }

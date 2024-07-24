@@ -167,3 +167,18 @@ int getYearFromDate(char* date) {
 
     return year;
 }
+
+char* stringToLower(char* str) {
+    if (str == NULL) return NULL;
+    
+    char* lowercase = malloc(strlen(str) + 1);
+    if (lowercase == NULL) return NULL;
+    
+    for (int i = 0; str[i] != '\0'; i++)
+        lowercase[i] = tolower((char)str[i]);
+    
+    // Terminate string
+    lowercase[strlen(str)] = '\0';
+    
+    return lowercase;
+}

@@ -23,3 +23,5 @@ int partition(PtList *athletes, int low, int high);
 void swapAthletes(PtList *athletes, int i, int j);
 
 int getYearFromDate(char* date);
+
+char* stringToLower(char* str);

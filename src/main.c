@@ -181,23 +181,35 @@ int main() {
                 {
                     if(!validateHosts(hosts)) break;
 
-                    char *inputSplug = malloc(sizeof(char) * MAX_ID_LENGTH);
+                    char location[MAX_ID_LENGTH];
 
-                    printf("Insert a game slug -> ");                    
-                    readString(inputSplug, MAX_ID_LENGTH);
+                    printf("Insert a location -> ");
+                    readString(location, MAX_ID_LENGTH);
 
-                    Host host;
-                    if(mapGet(hosts, inputSplug, &host) != MAP_OK) {
+                    int size = 0;
+                    mapSize(hosts, &size);
+
+                    bool found = false;
+                    MapValue *values = mapValues(hosts);
+                    int i = 0;
+                    for(; i < size; i++) {
+                        if(strcmp(stringToLower(values[i].location), stringToLower(location)) == 0) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if(!found) {
                         printf("Could not find a host with that slug!\n");
                         break;
                     }
 
                     clearScreen();
-                    printHost(host);
+                    printHost(values[i]);
                     printf("\nPress any key to continue.");
                     getchar();
 
-                    free(inputSplug);
+                    free(values);
                 }
                 break;
             case 9: //DISCIPLINE_STATISTICS
