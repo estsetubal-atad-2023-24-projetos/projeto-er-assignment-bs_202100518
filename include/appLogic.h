@@ -3,6 +3,7 @@
 #include "list.h"
 #include "listMedal.h"
 #include "map.h"
+#include "adtSet.h"
 
 void paginate(PtList athletes);
 
@@ -26,4 +27,10 @@ PtListMedal filterMedalsPerGameType(char *gameType, PtListMedal medals, PtMap ho
 
 void showTopN(int n, int startYear, int endYear, char *gameType, PtList athletes, PtListMedal medals, PtMap hosts);
 
-AdtSet* getGameSlugDisciplines(PtListMedal medals, char* gameSlug);
+PtAdtSet getGameSlugDisciplines(PtListMedal medals, char* gameSlug);
+
+void showDisciplineStatistics(PtAdtSet disciplines, PtListMedal medals);
+
+char* countryMostMedalsInDiscipline(PtListMedal medals, char* discipline);
+
+void getDisciplineWomenProportion(PtListMedal medals, char* discipline, int *womenCount, int *athleteCount);

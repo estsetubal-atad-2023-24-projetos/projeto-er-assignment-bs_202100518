@@ -139,7 +139,7 @@ PtListMedal importMedals(){
                     else if (strcmp(token, "GameTeam") == 0) medal->participantType = 'G';
                 }
                 else if(strcmp(fieldHeaders[field_count], "participant_title") == 0) {
-                    
+                    // Do nothing, we dont store this value
                 }
                 else if(strcmp(fieldHeaders[field_count], "athlete_id") == 0) {
                     strcpy(medal->athleteID, token);
@@ -148,7 +148,7 @@ PtListMedal importMedals(){
                     strcpy(medal->country, token);
                 }
                 else if(strcmp(fieldHeaders[field_count], "country_3_letter_code") == 0) {
-                    
+                    // Do nothing, we dont store this value
                 }
                 else if(strcmp(fieldHeaders[field_count], "") != 0) {
                     printf("Found invalid column in athletes.csv\n");

@@ -384,8 +384,6 @@ PtAdtSet getGameSlugDisciplines(PtListMedal medals, char* gameSlug) {
     return disciplines;
 }
 
-
-
 void showDisciplineStatistics(PtAdtSet disciplines, PtListMedal medals) {
     int discSize = 0, medalSize = 0;
 
@@ -401,10 +399,18 @@ void showDisciplineStatistics(PtAdtSet disciplines, PtListMedal medals) {
     printf("There were %d different disciplines.\n\n", discSize);
 
     Medal *discMedals = setValues(disciplines);
-    for(int i = 0; i < discSize; i+) {
+    for(int i = 0; i < discSize; i++) {
+        printf("----------------------------------\n");
         printf("Discipline: %s\n", discMedals[i].discipline);
-        printf("Country with most medals: %s\n", countryMostMedalsInDiscipline(medals, discMedals[i].discipline));
-        prinf("Number of women: %d of %d total participants");
+
+        char *countryMostMedals = countryMostMedalsInDiscipline(medals, discMedals[i].discipline);
+        printf("Country with most medals: %s\n", countryMostMedals);
+        free(countryMostMedals);
+
+        int totalAths = 0, women = 0;
+        getDisciplineWomenProportion(medals, discMedals[i].discipline, &women, &totalAths);
+        printf("Number of women: %d of %d total participants\n", women, totalAths);
+        printf("----------------------------------\n\n");
     }
 
     free(discMedals);
@@ -423,7 +429,7 @@ char* countryMostMedalsInDiscipline(PtListMedal medals, char* discipline) {
     listMedalSize(medals, &size);
 
     int countryCapacity = sizeof(medals);
-    CountryMedalCount countryMedals[countryCapacity];
+    CountryMedalCount *countryMedals = malloc(sizeof(CountryMedalCount) * countryCapacity + 1);
     int countryCount = 0;
 
     // Initialize countryMedals array
@@ -481,5 +487,29 @@ char* countryMostMedalsInDiscipline(PtListMedal medals, char* discipline) {
     // No medals found so no country with most medals
     if (maxIndex == -1) return "";
 
-    return countryMedals[maxIndex].country
+    char *country = malloc(sizeof(countryMedals[maxIndex].country) + 1);
+    strcpy(country, countryMedals[maxIndex].country);
+
+    free(countryMedals);
+
+    return country;
+}
+
+void getDisciplineWomenProportion(PtListMedal medals, char* discipline, int *womenCount, int *athleteCount) {
+    int medalSize = 0;
+    listMedalSize(medals, &medalSize);
+
+    *womenCount = 0;
+    *athleteCount = 0;
+
+    for(int i = 0; i < medalSize; i++) {
+        Medal current;
+        listMedalGet(medals, i, &current);
+
+        if (strcmp(current.discipline, discipline) != 0) continue;
+
+        if(strcmp(current.gender, "Women") == 0) (*womenCount)++;
+
+        (*athleteCount)++;
+    }
 }

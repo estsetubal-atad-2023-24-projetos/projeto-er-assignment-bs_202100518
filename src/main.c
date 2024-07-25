@@ -225,8 +225,9 @@ int main() {
                     // Fetch all disciplines for a gameSlug
                     PtAdtSet disciplines = getGameSlugDisciplines(medals, gameSlug);
 
-
-
+                    showDisciplineStatistics(disciplines, medals);
+                    
+                    setDestroy(disciplines);
                     break;
                 }
             case 10: //ATHLETE_INFO

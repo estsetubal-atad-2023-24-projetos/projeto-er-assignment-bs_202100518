@@ -9,7 +9,7 @@ typedef struct AdtSetImpl {
     int capacity;
 } AdtSetImpl;
 
-static void resizeSet(PtAdtSet *set, int newCapacity) {
+static void resizeSet(PtAdtSet set, int newCapacity) {
     AdtSetImpl *setList = (AdtSetImpl *)set;
     Medal *newElements = (Medal*) malloc(newCapacity * sizeof(Medal));
 
@@ -22,8 +22,8 @@ static void resizeSet(PtAdtSet *set, int newCapacity) {
     setList->capacity = newCapacity;
 }
 
-PtAdtSet* setCreate() {
-    AdtSetImpl *set = (AdtSetImpl*) malloc(sizeof(AdtSetImpl));
+PtAdtSet setCreate() {
+    AdtSetImpl *set = (AdtSetImpl*) malloc(sizeof(PtAdtSet));
 
     set->size = 0;
     set->capacity = 10;
@@ -32,8 +32,8 @@ PtAdtSet* setCreate() {
     return set;
 }
 
-void setDestroy(PtAdtSet *set) {
-    if (set == NULL) return NULL;
+void setDestroy(PtAdtSet set) {
+    if (set == NULL) return;
 
     AdtSetImpl *setList = (AdtSetImpl *)set;
 
@@ -41,7 +41,7 @@ void setDestroy(PtAdtSet *set) {
     free(setList);
 }
 
-bool setAdd(PtAdtSet *set, Medal elem) {
+bool setAdd(PtAdtSet set, Medal elem) {
     if(set == NULL) return false;
 
     if (setContains(set, elem))
@@ -55,7 +55,7 @@ bool setAdd(PtAdtSet *set, Medal elem) {
     return true;
 }
 
-bool setRemove(PtAdtSet *set, Medal elem) {
+bool setRemove(PtAdtSet set, Medal elem) {
     if(set == NULL) return false;
 
     AdtSetImpl *setList = (AdtSetImpl *)set;
@@ -80,7 +80,7 @@ bool setElemCompare(Medal elem1, Medal elem2) {
     else return false;
 }
 
-bool setContains(PtAdtSet *set, Medal elem) {
+bool setContains(PtAdtSet set, Medal elem) {
     if(set == NULL) return false;
 
     AdtSetImpl *setList = (AdtSetImpl *)set;
@@ -90,14 +90,14 @@ bool setContains(PtAdtSet *set, Medal elem) {
     return false;
 }
 
-int setSize(PtAdtSet *set) {
+int setSize(PtAdtSet set) {
     if(set == NULL) return 0;
 
     AdtSetImpl *setList = (AdtSetImpl *)set;    
     return setList->size;
 }
 
-bool setSubset(PtAdtSet *subset, PtAdtSet *set) {
+bool setSubset(PtAdtSet subset, PtAdtSet set) {
     if(subset == NULL || set == NULL) return false;
 
     AdtSetImpl *subsetList = (AdtSetImpl *)subset;
@@ -107,7 +107,7 @@ bool setSubset(PtAdtSet *subset, PtAdtSet *set) {
     return true;
 }
 
-bool setIsEmpty(PtAdtSet *set) {
+bool setIsEmpty(PtAdtSet set) {
     if(set == NULL) return true;
 
     AdtSetImpl *setList = (AdtSetImpl *)set;
@@ -115,16 +115,18 @@ bool setIsEmpty(PtAdtSet *set) {
     return setList->size == 0;
 }
 
-void setClear(PtAdtSet *set) {
+void setClear(PtAdtSet set) {
     if(set == NULL) return;
 
     AdtSetImpl *setList = (AdtSetImpl *)set;
+
+    free(setList->elements);
 
     setList->size = 0;
     resizeSet(set, 10);
 }
 
-Medal* setValues(PtAdtSet *set) {
+Medal* setValues(PtAdtSet set) {
     if(set == NULL) return NULL;
 
     AdtSetImpl *setList = (AdtSetImpl *)set;
@@ -136,7 +138,7 @@ Medal* setValues(PtAdtSet *set) {
     return values;
 }
 
-void setPrint(PtAdtSet *set) {
+void setPrint(PtAdtSet set) {
     if(set == NULL) {
         printf("No data to display, set is null.\n");
         return;
@@ -144,10 +146,10 @@ void setPrint(PtAdtSet *set) {
 
     AdtSetImpl *setList = (AdtSetImpl *)set;
 
-    printf("{ ");
+    printf("----------------\n");
+
+    for (int i = 0; i < setList->size; i++)
+        printMedal(setList->elements[i]);
     
-    for (int i = 0; i < setList->size; i++) 
-        printf("%d ", setList->elements[i]);
-    
-    printf("}\n");
+    printf("----------------\n\n");
 }
