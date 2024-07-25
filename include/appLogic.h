@@ -25,3 +25,5 @@ PtListMedal filterMedalsPerDate(int startYear, int endYear, PtListMedal medals, 
 PtListMedal filterMedalsPerGameType(char *gameType, PtListMedal medals, PtMap hosts);
 
 void showTopN(int n, int startYear, int endYear, char *gameType, PtList athletes, PtListMedal medals, PtMap hosts);
+
+AdtSet* getGameSlugDisciplines(PtListMedal medals, char* gameSlug);

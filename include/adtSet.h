@@ -3,31 +3,29 @@
 #include <stdbool.h>
 #include "medal.h"
 
-// Estrutura do Set
-typedef struct {
-    Medal *elements;
-    int size;
-    int capacity;
-} Set;
+struct AdtSetImpl;
 
-Set* setCreate();
+/** Definition of pointer to the  data stucture. */
+typedef struct AdtSetImpl *PtAdtSet;
 
-void setDestroy(Set *set);
+PtAdtSet* setCreate();
 
-bool setAdd(Set *set, Medal elem);
+void setDestroy(PtAdtSet *set);
 
-bool setRemove(Set *set, Medal elem);
+bool setAdd(PtAdtSet *set, Medal elem);
 
-bool setContains(Set *set, Medal elem);
+bool setRemove(PtAdtSet *set, Medal elem);
 
-int setSize(Set *set);
+bool setContains(PtAdtSet *set, Medal elem);
 
-bool setSubset(Set *subset, Set *set);
+int setSize(PtAdtSet *set);
 
-bool setIsEmpty(Set *set);
+bool setSubset(PtAdtSet *subset, PtAdtSet *set);
 
-void setClear(Set *set);
+bool setIsEmpty(PtAdtSet *set);
 
-Medal* setValues(Set *set);
+void setClear(PtAdtSet *set);
 
-void setPrint(Set *set);
+Medal* setValues(PtAdtSet *set);
+
+void setPrint(PtAdtSet *set);
