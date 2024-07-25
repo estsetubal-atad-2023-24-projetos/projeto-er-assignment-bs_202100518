@@ -9,6 +9,7 @@
 #include "input.h"
 #include "athlete.h"
 #include "host.h"
+#include "adtSet.h"
 
 bool validateAthletes(PtList a);
 bool validateMedals(PtListMedal m);
@@ -210,14 +211,23 @@ int main() {
                     getchar();
 
                     free(values);
+                    break;
                 }
-                break;
             case 9: //DISCIPLINE_STATISTICS
                 {
                     if(!validateMedals(medals)) break;
+                    
+                    char gameSlug[MAX_GAME_LENGTH];
 
+                    printf("Insert a game slug -> ");
+                    readString(gameSlug, MAX_ID_LENGTH);
 
+                    // Fetch all disciplines for a gameSlug
+                    PtAdtSet disciplines = getGameSlugDisciplines(medals, gameSlug);
 
+                    showDisciplineStatistics(disciplines, medals);
+                    
+                    setDestroy(disciplines);
                     break;
                 }
             case 10: //ATHLETE_INFO
