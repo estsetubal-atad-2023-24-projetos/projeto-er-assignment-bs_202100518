@@ -1,3 +1,12 @@
+/**
+ * @file helpers.c
+ * @brief Implementation file for helper functions used throughout the Olympics Super Parser program.
+ *
+ * This file includes implementations of utility functions that assist with string manipulation,
+ * sorting algorithms, data parsing, and other general-purpose functionalities to support
+ * the main operations of the program. Functions include date handling, string processing,
+ * quick sort algorithm for lists, and more.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -8,6 +17,10 @@
 
 #define MAX_NUMS_STR 200
 
+/**
+ * @brief Displays the start menu and captures user choice.
+ * @return The user's menu choice as an integer.
+ */
 int startMenu() {
     int res = -1;
 
@@ -34,6 +47,11 @@ int startMenu() {
     return res;
 }
 
+/**
+ * @brief Extracts integers from a string.
+ * @param str The string to extract numbers from.
+ * @return A concatenated integer of all numbers found in the string.
+ */
 int getNumbersFromString(char *str) {
     char *p = str;
 
@@ -46,6 +64,11 @@ int getNumbersFromString(char *str) {
     return numbers;
 }
 
+/**
+ * @brief Extracts non-numeric characters from a string and returns them as a new string.
+ * @param str The string to process.
+ * @return A new string containing only non-numeric characters.
+ */
 char* getCharsOnlyFromString(char *str) {
     char *p = str;
 
@@ -64,6 +87,12 @@ char* getCharsOnlyFromString(char *str) {
     return finalString;
 }
 
+/**
+ * @brief Calculates the difference in days between two dates.
+ * @param startDate The start date in the format "YYYY-MM-DDT".
+ * @param endDate The end date in the format "YYYY-MM-DDT".
+ * @return The number of days between the two dates.
+ */
 int getDateDiffInDays(char *startDate, char *endDate) {
     int startYear = 0, startMonth = 0, startDay = 0;
     int endYear = 0, endMonth = 0, endDay = 0;
@@ -87,6 +116,13 @@ int getDateDiffInDays(char *startDate, char *endDate) {
     return abs(endJulian - startJulian);
 }
 
+/**
+ * @brief Converts a given date to the Julian day number.
+ * @param year Year of the date.
+ * @param month Month of the date.
+ * @param day Day of the date.
+ * @return Julian day number.
+ */
 int dateToJulianDay(int year, int month, int day) {
     if (month < 3) {
         year--;
@@ -102,7 +138,12 @@ int dateToJulianDay(int year, int month, int day) {
     return D + E + day + C - 1524;
 }
 
-
+/**
+ * @brief Concatenates two integers.
+ * @param x First integer.
+ * @param y Second integer.
+ * @return Concatenated result as an integer.
+ */
 int concatenate(int x, int y) {
     int pow = 10;
     while(y >= pow) pow *= 10;
@@ -110,6 +151,9 @@ int concatenate(int x, int y) {
     return x * pow + y;        
 }
 
+/**
+ * @brief Clears the terminal screen based on the operating system.
+ */
 void clearScreen(){
     #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
         system("clear");
@@ -120,6 +164,12 @@ void clearScreen(){
     #endif
 }
 
+/**
+ * @brief Implements the quick sort algorithm on a list of athletes.
+ * @param athletes Pointer to the list of athletes.
+ * @param low Starting index.
+ * @param high Ending index.
+ */
 void quickSort(PtList *athletes, int low, int high) {
     if (low >= high) return;
 
@@ -129,8 +179,13 @@ void quickSort(PtList *athletes, int low, int high) {
     quickSort(athletes, pivot + 1, high); // Sort second half
 }
 
-// Selects the last element (pivot) and moves all athletes with name lesser than
-// the pivot to the left, and greater to the right
+/**
+ * @brief Partitions the list around a pivot for quick sort.
+ * @param athletes Pointer to the list of athletes.
+ * @param low Starting index.
+ * @param high Ending index.
+ * @return New pivot index.
+ */
 int partition(PtList *athletes, int low, int high) {
     // Get pivot
     Athlete pivotAth;
@@ -151,6 +206,12 @@ int partition(PtList *athletes, int low, int high) {
     return (i + 1);
 }
 
+/**
+ * @brief Swaps two athletes in a list.
+ * @param athletes Pointer to the list of athletes.
+ * @param i Index of the first athlete.
+ * @param j Index of the second athlete.
+ */
 void swapAthletes(PtList *athletes, int i, int j) {
     Athlete ath1, ath2;
     listGet(*athletes, i, &ath1);
@@ -160,6 +221,12 @@ void swapAthletes(PtList *athletes, int i, int j) {
     listSet(*athletes, j, ath1, NULL);
 }
 
+
+/**
+ * @brief Extracts the year from a date string.
+ * @param date Date string in the format "YYYY-MM-DD".
+ * @return The year as an integer.
+ */
 int getYearFromDate(char* date) {
     int year;
 
@@ -168,6 +235,11 @@ int getYearFromDate(char* date) {
     return year;
 }
 
+/**
+ * @brief Converts a string to lowercase.
+ * @param str String to convert.
+ * @return A new string in lowercase.
+ */
 char* stringToLower(char* str) {
     if (str == NULL) return NULL;
     

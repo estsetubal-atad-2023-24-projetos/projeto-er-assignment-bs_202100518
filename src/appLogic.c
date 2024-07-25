@@ -1,3 +1,13 @@
+/**
+ * @file appLogic.c
+ * @brief Implementation file for the application logic of the Olympics Super Parser.
+ *
+ * Contains functions responsible for processing and handling data related to athletes
+ * and their performances, including pagination, filtering, and aggregation of athlete
+ * data. This file also implements functions to display detailed statistics and manage
+ * sorting and querying operations on the dataset.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -12,6 +22,10 @@
 
 #define MAX_PAGE_SIZE 20
 
+/**
+ * @brief Paginates and displays a list of athletes.
+ * @param athletes The list of athletes to paginate.
+ */
 void paginate(PtList athletes) {
     int athletesCount = 0;
     int currentPage = 1;
@@ -65,6 +79,10 @@ void paginate(PtList athletes) {
     }
 }
 
+/**
+ * @brief Sorts a list of athletes alphabetically by their names.
+ * @param athletes Pointer to the list of athletes to be sorted.
+ */
 void orderAthletesAlphabetic(PtList *athletes) {
     if(athletes == NULL) return;
     
@@ -73,6 +91,11 @@ void orderAthletesAlphabetic(PtList *athletes) {
     quickSort(athletes, 0, athCount-1);
 }
 
+/**
+ * @brief Creates a shallow copy of a list of athletes.
+ * @param athletes The original list of athletes.
+ * @return A new list containing a shallow copy of the athletes.
+ */
 PtList listAthleteShallowCopy(PtList athletes) {
     int athleteCount = 0;
     PtList list = listCreate();
@@ -89,6 +112,12 @@ PtList listAthleteShallowCopy(PtList athletes) {
     return list;
 }
 
+/**
+ * @brief Filters athletes based on the number of participations.
+ * @param athletes The list of athletes to filter.
+ * @param participations Minimum number of participations to filter by.
+ * @return A new list containing athletes who meet the criteria.
+ */
 PtList filterAthletesPerParticipation(PtList athletes, int participations) {
     if(athletes == NULL) return NULL;
 
@@ -112,6 +141,12 @@ PtList filterAthletesPerParticipation(PtList athletes, int participations) {
     return list;
 }
 
+/**
+ * @brief Filters athletes who first participated in a specific year.
+ * @param athletes The list of athletes to filter.
+ * @param year The year to filter by.
+ * @return A new list containing athletes who first participated in the specified year.
+ */
 PtList filterAthletesPerFirstYear(PtList athletes, int year) {
     if(athletes == NULL) return NULL;
 
@@ -135,6 +170,12 @@ PtList filterAthletesPerFirstYear(PtList athletes, int year) {
     return list;
 }
 
+/**
+ * @brief Displays detailed information for a specific athlete based on their ID.
+ * @param athletes The list of all athletes.
+ * @param medals The list of all medals.
+ * @param athleteID The ID of the athlete to display information for.
+ */
 void showAthleteInfo(PtList athletes, PtListMedal medals, char *athleteID) {
 
     // Fetch corresponding athlete
@@ -176,6 +217,12 @@ void showAthleteInfo(PtList athletes, PtListMedal medals, char *athleteID) {
     free(filteredMedals);
 }
 
+/**
+ * @brief Retrieves all medals won by a specific athlete.
+ * @param medals The list of all medals.
+ * @param athleteID The ID of the athlete to search for.
+ * @return A new list containing all medals won by the specified athlete.
+ */
 PtListMedal getMedalsPerAthlete(PtListMedal medals, char *athleteID) {
     if(medals == NULL) return NULL;
 
@@ -199,6 +246,13 @@ PtListMedal getMedalsPerAthlete(PtListMedal medals, char *athleteID) {
     return list;
 }
 
+/**
+ * @brief Searches for an athlete by ID.
+ * @param athletes The list of athletes.
+ * @param athleteID The ID of the athlete to find.
+ * @param athlete Pointer to an Athlete structure to store the found athlete.
+ * @return True if the athlete is found, false otherwise.
+ */
 bool getAthleteById(PtList athletes, char *athleteID, Athlete* athlete) {
     int size = 0;
     listSize(athletes, &size);
@@ -213,6 +267,14 @@ bool getAthleteById(PtList athletes, char *athleteID, Athlete* athlete) {
     return false;
 }
 
+/**
+ * @brief Filters medals between specified start and end years.
+ * @param startYear The starting year of the period.
+ * @param endYear The ending year of the period.
+ * @param medals The list of medals to filter.
+ * @param hosts Mapping of game identifiers to hosts.
+ * @return A list of medals that fall within the specified years.
+ */
 PtListMedal filterMedalsPerDate(int startYear, int endYear, PtListMedal medals, PtMap hosts) {
     if(medals == NULL) return NULL;
 
@@ -237,6 +299,13 @@ PtListMedal filterMedalsPerDate(int startYear, int endYear, PtListMedal medals, 
     return list;
 }
 
+/**
+ * @brief Filters medals by game type (e.g., Summer or Winter Olympics).
+ * @param gameType The type of games to filter (e.g., "Summer").
+ * @param medals The list of medals to filter.
+ * @param hosts Mapping of game identifiers to hosts, which include the season.
+ * @return A list of medals from the specified type of games.
+ */
 PtListMedal filterMedalsPerGameType(char *gameType, PtListMedal medals, PtMap hosts) {
     if(medals == NULL) return NULL;
 
@@ -261,6 +330,16 @@ PtListMedal filterMedalsPerGameType(char *gameType, PtListMedal medals, PtMap ho
     return list;
 }
 
+/**
+ * @brief Displays statistics and information for the top N athletes.
+ * @param n Number of top athletes to display.
+ * @param startYear Start year of the period to consider.
+ * @param endYear End year of the period to consider.
+ * @param gameType Type of games (e.g., "Summer").
+ * @param athletes List of all athletes.
+ * @param medals List of all medals.
+ * @param hosts Mapping of game identifiers to hosts.
+ */
 void showTopN(int n, int startYear, int endYear, char *gameType, PtList athletes, PtListMedal medals, PtMap hosts) {
     if(athletes == NULL || medals == NULL || hosts == NULL) {
         printf("Make sure athletes, medals and hosts have been imported!");
@@ -367,6 +446,12 @@ void showTopN(int n, int startYear, int endYear, char *gameType, PtList athletes
     //free(topAthletes);
 }
 
+/**
+ * @brief Retrieves the disciplines of a given game from a set of medals.
+ * @param medals The list of medals.
+ * @param gameSlug The identifier for the game.
+ * @return A set of disciplines associated with the specified game.
+ */
 PtAdtSet getGameSlugDisciplines(PtListMedal medals, char* gameSlug) {
     int size = 0;
     listMedalSize(medals, &size);
@@ -384,6 +469,11 @@ PtAdtSet getGameSlugDisciplines(PtListMedal medals, char* gameSlug) {
     return disciplines;
 }
 
+/**
+ * @brief Displays statistics for a set of disciplines.
+ * @param disciplines The set of disciplines to analyze.
+ * @param medals The list of medals to consider for the analysis.
+ */
 void showDisciplineStatistics(PtAdtSet disciplines, PtListMedal medals) {
     int discSize = 0, medalSize = 0;
 
@@ -424,6 +514,12 @@ typedef struct {
     int total;
 } CountryMedalCount;
 
+/**
+ * @brief Determines the country with the most medals in a particular discipline.
+ * @param medals List of all medals.
+ * @param discipline The discipline to analyze.
+ * @return String containing the name of the country with the most medals in the specified discipline.
+ */
 char* countryMostMedalsInDiscipline(PtListMedal medals, char* discipline) {
     int size = 0;
     listMedalSize(medals, &size);
@@ -495,6 +591,13 @@ char* countryMostMedalsInDiscipline(PtListMedal medals, char* discipline) {
     return country;
 }
 
+/**
+ * @brief Calculates the proportion of female participants in a specific discipline.
+ * @param medals List of all medals.
+ * @param discipline The discipline to analyze.
+ * @param womenCount Pointer to store the count of women.
+ * @param athleteCount Pointer to store the total count of athletes.
+ */
 void getDisciplineWomenProportion(PtListMedal medals, char* discipline, int *womenCount, int *athleteCount) {
     int medalSize = 0;
     listMedalSize(medals, &medalSize);

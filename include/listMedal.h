@@ -4,7 +4,7 @@
  * 
  * Defines the type PtList and associated operations.
  * 
- * @author Raul Rohjans (rauljann@gmail.com)
+ * @author Raul Rohjans
  * @bug No known bugs.
  */
 

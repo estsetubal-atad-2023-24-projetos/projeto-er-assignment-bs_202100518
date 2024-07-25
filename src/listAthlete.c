@@ -4,8 +4,7 @@
  * @brief Provides an implementation of the ADT List with an array list
  * as the underlying data structure.
  * 
- * @author Bruno Silva (brunomnsilva@gmail.com)
- * @bug No known bugs.
+ * @author Raul Rohajns
  */
 
 #include "list.h"
@@ -21,7 +20,11 @@ typedef struct listImpl {
     int capacity;
 } ListImpl;
 
-
+/**
+ * @brief Ensures the capacity of the list to store more elements.
+ * @param list Pointer to the list.
+ * @return True if capacity is sufficient or successfully expanded, False on memory allocation failure.
+ */
 static bool ensureCapacity(PtList list) {
     if (list->size < list->capacity) return true;
     
@@ -37,6 +40,10 @@ static bool ensureCapacity(PtList list) {
     return true;
 }
 
+/**
+ * @brief Creates a new list for storing athletes.
+ * @return Pointer to the created list or NULL if memory allocation fails.
+ */
 PtList listCreate() {
 	PtList list = (PtList)malloc(sizeof(ListImpl));
 
@@ -55,6 +62,11 @@ PtList listCreate() {
     return list;
 }
 
+/**
+ * @brief Destroys the list and frees the allocated memory.
+ * @param ptList Double pointer to the list to be destroyed.
+ * @return LIST_OK if successful, LIST_NULL if the list pointer is NULL.
+ */
 int listDestroy(PtList *ptList) {
 	if (ptList == NULL || *ptList == NULL) return LIST_NULL;
 
@@ -70,6 +82,13 @@ int listDestroy(PtList *ptList) {
     return LIST_OK;
 }
 
+/**
+ * @brief Adds an element to the list at the specified rank.
+ * @param list Pointer to the list.
+ * @param rank The position at which to insert the new element.
+ * @param elem The element to be inserted.
+ * @return LIST_OK if successful, LIST_NULL if the list is NULL, LIST_INVALID_RANK if rank is out of bounds, or LIST_NO_MEMORY if memory allocation fails.
+ */
 int listAdd(PtList list, int rank, ListElem elem) {
 	if (list == NULL) return LIST_NULL;
     if (rank < 0 || rank > ((ListImpl *)list)->size) return LIST_INVALID_RANK;
@@ -85,6 +104,13 @@ int listAdd(PtList list, int rank, ListElem elem) {
     return LIST_OK;
 }
 
+/**
+ * @brief Removes an element from the list at the specified rank.
+ * @param list Pointer to the list.
+ * @param rank The position from which to remove the element.
+ * @param ptElem Pointer to store the removed element.
+ * @return LIST_OK if successful, LIST_NULL if the list is NULL, LIST_INVALID_RANK if rank is out of bounds.
+ */
 int listRemove(PtList list, int rank, ListElem *ptElem) {
 	if (list == NULL) return LIST_NULL;
 
@@ -101,6 +127,13 @@ int listRemove(PtList list, int rank, ListElem *ptElem) {
     return LIST_OK;
 }
 
+/**
+ * @brief Retrieves an element from the list at the specified rank.
+ * @param list Pointer to the list.
+ * @param rank The position from which to retrieve the element.
+ * @param ptElem Pointer to store the retrieved element.
+ * @return LIST_OK if successful, LIST_NULL if the list is NULL, LIST_INVALID_RANK if rank is out of bounds.
+ */
 int listGet(PtList list, int rank, ListElem *ptElem) {
 	if (list == NULL) return LIST_NULL;
 
@@ -114,6 +147,14 @@ int listGet(PtList list, int rank, ListElem *ptElem) {
     return LIST_OK;
 }
 
+/**
+ * @brief Replaces an element in the list at the specified rank.
+ * @param list Pointer to the list.
+ * @param rank The position at which to replace the element.
+ * @param elem The new element to be placed.
+ * @param ptOldElem Pointer to store the old element being replaced.
+ * @return LIST_OK if successful, LIST_NULL if the list is NULL, LIST_INVALID_RANK if rank is out of bounds.
+ */
 int listSet(PtList list, int rank, ListElem elem, ListElem *ptOldElem) {
 	if (list == NULL) return LIST_NULL;
 
@@ -128,6 +169,12 @@ int listSet(PtList list, int rank, ListElem elem, ListElem *ptOldElem) {
     return LIST_OK;
 }
 
+/**
+ * @brief Returns the number of elements in the list.
+ * @param list Pointer to the list.
+ * @param ptSize Pointer to store the number of elements.
+ * @return LIST_OK if successful, LIST_NULL if the list is NULL.
+ */
 int listSize(PtList list, int *ptSize) {
 	if (list == NULL) return LIST_NULL;
 
@@ -135,6 +182,11 @@ int listSize(PtList list, int *ptSize) {
     return LIST_OK;
 }
 
+/**
+ * @brief Checks if the list is empty.
+ * @param list Pointer to the list.
+ * @return True if the list is empty, False otherwise.
+ */
 bool listIsEmpty(PtList list) {
 	if (list == NULL) return 1;
 
@@ -143,6 +195,11 @@ bool listIsEmpty(PtList list) {
 	return (lst->size != 0);
 }
 
+/**
+ * @brief Clears the list of all elements.
+ * @param list Pointer to the list.
+ * @return LIST_OK if successful, LIST_NULL if the list is NULL.
+ */
 int listClear(PtList list) {
 	if (list == NULL) return LIST_NULL;
     ListImpl *lst = (ListImpl *)list;
@@ -154,6 +211,10 @@ int listClear(PtList list) {
     return LIST_OK;
 }
 
+/**
+ * @brief Prints all elements in the list.
+ * @param list Pointer to the list.
+ */
 void listPrint(PtList list) {
 	if (list == NULL) printf("(List NULL)\n");
     else if (listIsEmpty(list)) 

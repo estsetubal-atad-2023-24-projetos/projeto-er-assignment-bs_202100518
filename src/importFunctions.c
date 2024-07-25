@@ -1,3 +1,11 @@
+/**
+ * @file importFunctions.c
+ * @brief Implementation of functions to import data from CSV files into the application.
+ *
+ * This file contains implementations for functions that read and parse CSV files to create
+ * lists and maps of athletes, medals, and hosts respectively. It handles the opening and
+ * reading of files, parsing of CSV format, and populating data structures with parsed data.
+ */
 #include <stdio.h> 
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +23,10 @@
 #define MAX_FIELDS 100
 #define MAX_FIELD_HEADERS 10
 
+/**
+ * @brief Imports athletes from a CSV file into a list.
+ * @return A list of athletes or NULL if the file cannot be opened or parsed.
+ */
 PtList importAthletes() {
     PtList athletes = listCreate();
 
@@ -88,6 +100,10 @@ PtList importAthletes() {
     return athletes;
 }
 
+/**
+ * @brief Imports medals from a CSV file into a list.
+ * @return A list of medals or NULL if the file cannot be opened or parsed.
+ */
 PtListMedal importMedals(){
     PtListMedal medals = listMedalCreate();
 
@@ -183,6 +199,10 @@ PtListMedal importMedals(){
     return medals;
 }
 
+/**
+ * @brief Imports host data from a CSV file into a map.
+ * @return A map of hosts indexed by game slug or NULL if the file cannot be opened or parsed.
+ */
 PtMap importHosts(){
     PtMap hosts = mapCreate();
 
